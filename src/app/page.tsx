@@ -59,34 +59,11 @@ const HomePage = () => {
         <div className="absolute z-10 flex size-full flex-col justify-between bg-white">
           <Image
             fill
-            src="/img/texture.jpg"
+            src="/img/about-comp.jpg"
             alt="Texture background"
             quality={75}
             className="object-cover"
           />
-          <Image
-            width={2000}
-            height={300}
-            src="/img/beautiful-landscape-with-blue-sky.jpg"
-            alt="beautiful-landscape-with-blue-sky"
-            quality={75}
-            className="relative z-10 h-[300px] w-full object-cover"
-          />
-          <Image
-            width={2666}
-            height={597}
-            src="/img/footer-bg.png"
-            alt="Leaves illustration"
-            quality={75}
-            className="relative z-10"
-          />
-          <div
-            className="absolute inset-0 z-20"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1), rgba(255,255,255,0.9))",
-            }}
-          ></div>
         </div>
         <div className="relative z-20">
           <Container

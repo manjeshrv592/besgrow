@@ -3,26 +3,17 @@ import Image from "next/image";
 
 const AboutUsPage = () => {
   return (
-    <section className="relative h-screen">
+    <section className="relative lg:h-screen">
       <Image
-        src="/img/beautiful-landscape-with-blue-sky.jpg"
-        alt="Beautiful landscape with blue sky"
+        src="/img/inner-page-compo.jpg"
+        alt="Beautiful landscape with blue sky with leaves illustration"
         fill
-        quality={75}
         className="object-cover"
         priority
       />
-      <Image
-        src="/img/growscape.png"
-        alt="Branches illustrations"
-        height={500}
-        width={2000}
-        quality={75}
-        className="absolute bottom-0 h-[600px] w-full object-cover object-top"
-        priority
-      />
+
       <Container className="relative z-20 h-full">
-        <div className="flex h-full gap-24">
+        <div className="h-full gap-24 lg:flex">
           <div className="flex flex-1 flex-col gap-8 py-[12vh]">
             <div>
               <h1 className="h3">About Us</h1>
@@ -41,7 +32,7 @@ const AboutUsPage = () => {
                 elevate growing results.
               </p>
             </div>
-            <div className="relative flex-1 overflow-hidden">
+            <div className="relative h-56 flex-1 overflow-hidden lg:h-auto">
               <Image
                 src="/img/about-us.jpg"
                 alt="About Us"
@@ -50,7 +41,7 @@ const AboutUsPage = () => {
               />
             </div>
           </div>
-          <div className="relative flex basis-[27%] flex-col justify-end border border-y-neutral-300 py-[12vh]">
+          <div className="relative flex flex-col justify-end border border-y-neutral-300 py-[12vh] lg:basis-[27%]">
             <Image
               alt="fawn image"
               className="object-cover"

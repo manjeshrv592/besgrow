@@ -45,19 +45,10 @@ const ProductsPage = () => {
   return (
     <section className="relative">
       <Image
-        src="/img/beautiful-landscape-with-blue-sky.jpg"
-        alt="Beautiful landscape with blue sky"
+        src="/img/inner-page-compo.jpg"
+        alt="Beautiful landscape with blue sky with leaves illustration"
         fill
-        quality={50}
         className="object-cover"
-        priority
-      />
-      <Image
-        src="/img/growscape.png"
-        alt="Branches illustrations"
-        fill
-        quality={50}
-        className="absolute bottom-0 object-contain object-bottom"
         priority
       />
       <Container className="relative z-20 h-full">

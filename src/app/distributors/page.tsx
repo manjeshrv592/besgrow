@@ -13,6 +13,7 @@ import DistributorMap from "@/components/DistributorMap";
 
 const europeDistributors = [
   {
+    distributorName: "Besgrow Europe",
     country: "Netherlands",
     city: "Dalfsen",
     address: "De Vesting 26-A, 7722 GA",
@@ -21,6 +22,16 @@ const europeDistributors = [
     website: "www.besgrow-europe.com",
   },
   {
+    distributorName: "Besgrow Amsterdam",
+    country: "Netherlands",
+    city: "Amsterdam",
+    address: "Canal Street 10, 1000 AA",
+    phone: "+31 (0)20-123456",
+    email: "amsterdam@besgrow-europe.com",
+    website: "www.besgrow-europe.com",
+  },
+  {
+    distributorName: "Besgrow Germany",
     country: "Germany",
     city: "Hamburg",
     address: "Hafenstraße 42, 20457",
@@ -29,6 +40,7 @@ const europeDistributors = [
     website: "www.besgrow-de.com",
   },
   {
+    distributorName: "Besgrow France",
     country: "France",
     city: "Lyon",
     address: "Rue de la République 15, 69001",
@@ -37,6 +49,7 @@ const europeDistributors = [
     website: "www.besgrow-fr.com",
   },
   {
+    distributorName: "Besgrow Spain",
     country: "Spain",
     city: "Valencia",
     address: "Calle de Colón 28, 46004",
@@ -45,6 +58,7 @@ const europeDistributors = [
     website: "www.besgrow-es.com",
   },
   {
+    distributorName: "Besgrow Poland",
     country: "Poland",
     city: "Warsaw",
     address: "ul. Marszałkowska 10, 00-001",
@@ -56,6 +70,7 @@ const europeDistributors = [
 
 const restOfWorldDistributors = [
   {
+    distributorName: "Besgrow China",
     country: "China",
     city: "Beijing",
     address: "Example Street 11, 2101 CB",
@@ -65,6 +80,7 @@ const restOfWorldDistributors = [
   },
 
   {
+    distributorName: "Besgrow Argentina",
     country: "Argentina",
     city: "Buenos Aires",
     address: "Av. Corrientes 1250, C1043",
@@ -73,6 +89,7 @@ const restOfWorldDistributors = [
     website: "www.besgrow-ar.com",
   },
   {
+    distributorName: "Besgrow USA",
     country: "United States of America",
     city: "Portland",
     address: "1234 NW Flanders St, OR 97209",
@@ -81,6 +98,7 @@ const restOfWorldDistributors = [
     website: "www.besgrow-us.com",
   },
   {
+    distributorName: "Besgrow Brazil",
     country: "Brazil",
     city: "São Paulo",
     address: "Rua Augusta 1508, 01304-001",
@@ -89,6 +107,7 @@ const restOfWorldDistributors = [
     website: "www.besgrow-br.com",
   },
   {
+    distributorName: "Besgrow South Africa",
     country: "South Africa",
     city: "Cape Town",
     address: "12 Long Street, Cape Town 8001",
@@ -97,6 +116,7 @@ const restOfWorldDistributors = [
     website: "www.besgrow-za.com",
   },
   {
+    distributorName: "Besgrow India",
     country: "India",
     city: "Mumbai",
     address: "Bandra Kurla Complex, 400051",
@@ -106,6 +126,7 @@ const restOfWorldDistributors = [
   },
 
   {
+    distributorName: "Besgrow Australia",
     country: "Australia",
     city: "Melbourne",
     address: "123 Collins Street, VIC 3000",
@@ -140,23 +161,24 @@ const DistributorsPage = () => {
   const distributors =
     region === "europe" ? europeDistributors : restOfWorldDistributors;
 
+  const groupedDistributors = distributors.reduce(
+    (acc, dist) => {
+      if (!acc[dist.country]) {
+        acc[dist.country] = [];
+      }
+      acc[dist.country].push(dist);
+      return acc;
+    },
+    {} as Record<string, typeof distributors>,
+  );
+
   return (
     <section className="h-screen">
       <Image
-        src="/img/beautiful-landscape-with-blue-sky.jpg"
-        alt="Beautiful landscape with blue sky"
+        src="/img/inner-page-compo.jpg"
+        alt="Beautiful landscape with blue sky with leaves illustration"
         fill
-        quality={75}
         className="object-cover"
-        priority
-      />
-      <Image
-        src="/img/growscape.png"
-        alt="Branches illustrations"
-        height={500}
-        width={2000}
-        quality={75}
-        className="absolute bottom-0 h-[600px] w-full object-cover object-top"
         priority
       />
       <Container className="relative z-20 h-full">
@@ -184,16 +206,16 @@ const DistributorsPage = () => {
               information at your fingertips.
             </div>
           </div>
-          <div className="relative flex basis-[27%] flex-col border-x border-neutral-300 px-4 py-[12vh]">
+          <div className="relative flex basis-[27%] flex-col border-x border-neutral-300 px-4 pt-[12vh] pb-[4vh]">
             <Image
               alt="fawn image"
               className="object-cover"
               src="/img/leaves-vertical.jpg"
               fill
             />
-            <div className="relative z-20">
+            <div className="relative z-20 flex h-full flex-col overflow-hidden">
               {/* Toggle Pill */}
-              <div className="mb-4 flex justify-center">
+              <div className="mb-4 flex shrink-0 justify-center">
                 <div className="border-besgrow-green relative inline-flex rounded-full border-2 bg-white">
                   {/* Sliding highlighter */}
                   <span
@@ -222,7 +244,7 @@ const DistributorsPage = () => {
               </div>
 
               {/* Heading */}
-              <div className="mb-4 text-center text-[#184E14]">
+              <div className="mb-4 shrink-0 text-center text-[#184E14]">
                 <h4 className="font-ronnia text-[max(16px,1.2vw)] font-semibold">
                   {region === "europe"
                     ? "European Locations"
@@ -234,71 +256,99 @@ const DistributorsPage = () => {
               </div>
 
               {/* Accordion */}
-              <Accordion
-                type="single"
-                collapsible
-                value={activeCountry ?? undefined}
-                onValueChange={(value) => setActiveCountry(value || null)}
-                className="flex flex-col gap-3 border-none"
-              >
-                {distributors.map((dist) => (
-                  <AccordionItem
-                    key={dist.country}
-                    value={dist.country}
-                    className="cursor-pointer rounded-lg border-none bg-white"
-                  >
-                    <AccordionTrigger className="rounded-none px-4 py-3 hover:no-underline">
-                      {dist.country}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <table className="w-full text-sm">
-                        <tbody className="text-neutral-700">
-                          <tr>
-                            <td className="py-1 pr-4 text-neutral-500">City</td>
-                            <td className="py-1 font-semibold">{dist.city}</td>
-                          </tr>
-                          <tr>
-                            <td className="py-1 pr-4 text-neutral-500">
-                              Address
-                            </td>
-                            <td className="py-1 font-semibold">
-                              {dist.address}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="py-1 pr-4 text-neutral-500">
-                              Phone
-                            </td>
-                            <td className="py-1 font-semibold">{dist.phone}</td>
-                          </tr>
-                          <tr>
-                            <td className="py-1 pr-4 text-neutral-500">
-                              Email
-                            </td>
-                            <td className="py-1 font-semibold text-blue-700">
-                              <a href={`mailto:${dist.email}`}>{dist.email}</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="py-1 pr-4 text-neutral-500">
-                              Website
-                            </td>
-                            <td className="py-1 font-semibold text-blue-700">
-                              <a
-                                href={`https://${dist.website}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
+              <div className="custom-scrollbar flex-1 overflow-y-auto pr-2 pb-4">
+                <Accordion
+                  type="single"
+                  collapsible
+                  value={activeCountry ?? undefined}
+                  onValueChange={(value) => setActiveCountry(value || null)}
+                  className="flex flex-col gap-3 border-none"
+                >
+                  {Object.entries(groupedDistributors).map(
+                    ([country, countryDistributors]) => (
+                      <AccordionItem
+                        key={country}
+                        value={country}
+                        className="cursor-pointer rounded-lg border-none bg-white"
+                      >
+                        <AccordionTrigger className="rounded-none px-4 py-3 hover:no-underline">
+                          {country}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="flex flex-col gap-4">
+                            {countryDistributors.map((dist, idx) => (
+                              <div
+                                key={idx}
+                                className={
+                                  idx > 0
+                                    ? "border-t border-neutral-200 pt-3"
+                                    : ""
+                                }
                               >
-                                {dist.website}
-                              </a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                                <h5 className="text-besgrow-green mb-2 px-4 text-[15px] font-semibold">
+                                  {dist.distributorName}
+                                </h5>
+                                <table className="w-full text-sm">
+                                  <tbody className="text-neutral-700">
+                                    <tr>
+                                      <td className="py-1 pr-4 pl-4 text-neutral-500">
+                                        City
+                                      </td>
+                                      <td className="py-1 font-semibold">
+                                        {dist.city}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td className="py-1 pr-4 pl-4 text-neutral-500">
+                                        Address
+                                      </td>
+                                      <td className="py-1 font-semibold">
+                                        {dist.address}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td className="py-1 pr-4 pl-4 text-neutral-500">
+                                        Phone
+                                      </td>
+                                      <td className="py-1 font-semibold">
+                                        {dist.phone}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td className="py-1 pr-4 pl-4 text-neutral-500">
+                                        Email
+                                      </td>
+                                      <td className="py-1 font-semibold text-blue-700">
+                                        <a href={`mailto:${dist.email}`}>
+                                          {dist.email}
+                                        </a>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td className="py-1 pr-4 pl-4 text-neutral-500">
+                                        Website
+                                      </td>
+                                      <td className="py-1 font-semibold text-blue-700">
+                                        <a
+                                          href={`https://${dist.website}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {dist.website}
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ),
+                  )}
+                </Accordion>
+              </div>
             </div>
           </div>
         </div>
