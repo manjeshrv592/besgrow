@@ -285,10 +285,10 @@ const DistributorsPage = () => {
                                     : ""
                                 }
                               >
-                                <h5 className="text-besgrow-green mb-2 px-4 text-[15px] font-semibold">
+                                <h5 className="text-besgrow-green mb-2 px-4 text-sm font-semibold">
                                   {dist.distributorName}
                                 </h5>
-                                <table className="w-full text-sm">
+                                <table className="w-full text-xs">
                                   <tbody className="text-neutral-700">
                                     <tr>
                                       <td className="py-1 pr-4 pl-4 text-neutral-500">

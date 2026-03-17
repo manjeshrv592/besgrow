@@ -11,6 +11,7 @@ import { LuMail, LuPhone } from "react-icons/lu";
 import { client } from "@/sanity/client";
 import { preFooterQuery, footerQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
+import { BsInstagram, BsTwitter, BsFacebook, BsLinkedin } from "react-icons/bs";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -151,7 +152,7 @@ export default async function RootLayout({
                         rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
-                        FB
+                        <BsFacebook fill="#4a8844" />
                       </a>
                     </li>
                     <li>
@@ -161,7 +162,7 @@ export default async function RootLayout({
                         rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
-                        TT
+                        <BsTwitter fill="#4a8844" />
                       </a>
                     </li>
                     <li>
@@ -171,7 +172,7 @@ export default async function RootLayout({
                         rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
-                        IN
+                        <BsInstagram fill="#4a8844" />
                       </a>
                     </li>
                     <li>
@@ -181,7 +182,7 @@ export default async function RootLayout({
                         rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
-                        LN
+                        <BsLinkedin fill="#4a8844" />
                       </a>
                     </li>
                   </ul>

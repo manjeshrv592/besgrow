@@ -35,19 +35,9 @@ const ContactUsPage = async () => {
     <section className="h-screen">
       <Image
         src={bgSrc}
-        alt="Beautiful landscape with blue sky"
+        alt="Beautiful landscape with blue sky with leaves illustration"
         fill
-        quality={75}
         className="object-cover"
-        priority
-      />
-      <Image
-        src="/img/growscape.png"
-        alt="Branches illustrations"
-        height={500}
-        width={2000}
-        quality={75}
-        className="absolute bottom-0 h-[600px] w-full object-cover object-top"
         priority
       />
       <Container className="relative z-20 h-full">

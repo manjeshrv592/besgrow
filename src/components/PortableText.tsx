@@ -4,6 +4,8 @@ import { PortableText as PortableTextReact } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
 import { urlFor } from "@/sanity/image";
+import IconButton from "./ui/IconButton";
+import { BsDownload } from "react-icons/bs";
 
 // Custom components for rendering Portable Text blocks
 const components = {
@@ -15,7 +17,7 @@ const components = {
     }) => {
       if (!value?.asset?._ref) return null;
       return (
-        <div className="relative my-6 aspect-video w-full overflow-hidden rounded-lg">
+        <div className="relative my-6 h-[400px] max-h-[400px] w-full overflow-hidden">
           <Image
             src={urlFor(value).width(1200).url()}
             alt={value.alt || ""}
@@ -50,16 +52,48 @@ const components = {
     }: {
       value: { label?: string; file?: { asset?: { _ref: string } } };
     }) => {
-      // We render a styled button - the file URL will need to be resolved
       const label = value.label || "Download Brochure";
+
+      let fileUrl = "";
+      if (value.file?.asset?._ref) {
+        // e.g. "file-1234abc-pdf" -> "1234abc.pdf"
+        const [, id, ext] = value.file.asset._ref.split("-");
+        const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+        const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+        if (projectId && dataset && id && ext) {
+          fileUrl = `https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}`;
+        }
+      }
+
       return (
-        <div className="my-8">
-          <button
-            className="bg-besgrow-green inline-flex cursor-pointer items-center gap-2 rounded-full px-6 py-2 font-semibold text-white transition-colors hover:opacity-90"
-            type="button"
-          >
-            {label}
-          </button>
+        <div className="my-8 flex justify-start">
+          {fileUrl ? (
+            <IconButton
+              href={fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              icon={
+                <BsDownload
+                  className="translate-y-0.5 text-white lg:translate-none"
+                  strokeWidth={1}
+                />
+              }
+            >
+              {label}
+            </IconButton>
+          ) : (
+            <IconButton
+              type="button"
+              icon={
+                <BsDownload
+                  className="translate-y-0.5 text-white lg:translate-none"
+                  strokeWidth={1}
+                />
+              }
+            >
+              {label}
+            </IconButton>
+          )}
         </div>
       );
     },
@@ -78,9 +112,21 @@ const components = {
         {children}
       </h4>
     ),
-    normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="text-besgrow-green mb-4">{children}</p>
-    ),
+    normal: ({ children, value }: any) => {
+      // Check if the paragraph is completely empty (a line break in Sanity)
+      // Sanity usually represents empty lines as a block with a single child that has text == ""
+      const isEmpty =
+        !value ||
+        (value.children &&
+          value.children.length === 1 &&
+          value.children[0].text === "");
+
+      return (
+        <p className={`text-besgrow-green ${isEmpty ? "mb-3" : "mb-1"}`}>
+          {!isEmpty && children}
+        </p>
+      );
+    },
   },
   marks: {
     strong: ({ children }: { children?: React.ReactNode }) => (
