@@ -8,6 +8,9 @@ import Link from "next/link";
 import Container from "@/components/layout/Container";
 import { GoLocation } from "react-icons/go";
 import { LuMail, LuPhone } from "react-icons/lu";
+import { client } from "@/sanity/client";
+import { preFooterQuery, footerQuery } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,11 +32,48 @@ const ronnia = localFont({
   variable: "--font-ronnia",
 });
 
-export default function RootLayout({
+// Fallback data
+const preFooterFallback = {
+  text: "Besgrow is a young and dynamic company, specialized in the production of high quality growing and landscaping substrates from sustainable, renewable resources",
+};
+
+const footerFallback = {
+  addressTitle: "The Netherlands",
+  address:
+    "Besgrow Europe B.V. De Vesting 26-A 7722 GA Dalfsen The Netherlands",
+  email: "info@besgrow-europe.com",
+  phone: "+31 (0)321-745748",
+  copyrightText: `© ${new Date().getFullYear()} Besgrow - Gerealiseerd door NUGTR`,
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [preFooterData, footerData] = await Promise.all([
+    client.fetch(preFooterQuery),
+    client.fetch(footerQuery),
+  ]);
+
+  // Pre-footer values
+  const preFooterText = preFooterData?.text || preFooterFallback.text;
+  const preFooterBgSrc = preFooterData?.backgroundImage
+    ? urlFor(preFooterData.backgroundImage).width(1920).quality(75).url()
+    : "/img/fallen-leaves.jpg";
+
+  // Footer values
+  const addressTitle = footerData?.addressTitle || footerFallback.addressTitle;
+  const address = footerData?.address || footerFallback.address;
+  const email = footerData?.email || footerFallback.email;
+  const phone = footerData?.phone || footerFallback.phone;
+  const copyrightText =
+    footerData?.copyrightText || footerFallback.copyrightText;
+  const facebookUrl = footerData?.facebookUrl || "#";
+  const twitterUrl = footerData?.twitterUrl || "#";
+  const instagramUrl = footerData?.instagramUrl || "#";
+  const linkedinUrl = footerData?.linkedinUrl || "#";
+
   return (
     <html lang="en" className={cn("font-sans", figtree.variable)}>
       <body className={`${nokora.variable} antialiased`}>
@@ -41,16 +81,14 @@ export default function RootLayout({
         {children}
         <section className="relative py-[15vw] lg:py-[6vw]">
           <Image
-            src="/img/fallen-leaves.jpg"
+            src={preFooterBgSrc}
             alt="Fallen leaves"
             fill
             className="object-cover brightness-50"
           />
           <Container>
             <div className="relative z-10 mx-auto max-w-[50vw] text-center text-white">
-              Besgrow is a young and dynamic company, specialized in the
-              production of high quality growing and landscaping substrates from
-              sustainable, renewable resources
+              {preFooterText}
             </div>
           </Container>
         </section>
@@ -76,15 +114,14 @@ export default function RootLayout({
             <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:justify-between">
               <div className="text-besgrow-green">
                 <span className="mb-2 inline-block text-[max(1rem,1vw)] font-semibold">
-                  The Netherlands
+                  {addressTitle}
                 </span>
                 <div className="flex gap-2">
                   <span className="mt-[2px]">
                     <GoLocation size={20} />
                   </span>
                   <address className="max-w-[300px] not-italic">
-                    Besgrow Europe B.V. De Vesting 26-A 7722 GA Dalfsen The
-                    Netherlands
+                    {address}
                   </address>
                 </div>
               </div>
@@ -94,15 +131,13 @@ export default function RootLayout({
                   <span>
                     <LuMail strokeWidth={1} size={18} />
                   </span>
-                  <a href="mailto:info@besgrow-europe.com">
-                    info@besgrow-europe.com
-                  </a>
+                  <a href={`mailto:${email}`}>{email}</a>
                 </div>
                 <div className="mb-4 flex items-center gap-2">
                   <span>
                     <LuPhone strokeWidth={1} size={18} />
                   </span>
-                  <a href="tel:+31321745748">+31 (0)321-745748</a>
+                  <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{phone}</a>
                 </div>
                 <div className="mb-2 text-center font-semibold lg:text-left">
                   Social Media
@@ -111,7 +146,9 @@ export default function RootLayout({
                   <ul className="flex justify-center gap-4 lg:justify-start">
                     <li>
                       <a
-                        href="#"
+                        href={facebookUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
                         FB
@@ -119,7 +156,9 @@ export default function RootLayout({
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href={twitterUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
                         TT
@@ -127,7 +166,9 @@ export default function RootLayout({
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href={instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
                         IN
@@ -135,7 +176,9 @@ export default function RootLayout({
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href={linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
                       >
                         LN
@@ -165,10 +208,7 @@ export default function RootLayout({
                   </li>
                 </ul>
               </nav>
-              <p className="text-center text-xs">
-                &copy; {new Date().getFullYear()} Besgrow - Gerealiseerd door
-                NUGTR
-              </p>
+              <p className="text-center text-xs">{copyrightText}</p>
             </div>
           </Container>
         </footer>

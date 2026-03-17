@@ -1,5 +1,3 @@
-"use client";
-
 import Container from "@/components/layout/Container";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -7,12 +5,36 @@ import { Textarea } from "@/components/ui/textarea";
 import IconButton from "@/components/ui/IconButton";
 import { CiMail } from "react-icons/ci";
 import { LuUser, LuPhone, LuBuilding2, LuMessageSquare } from "react-icons/lu";
+import { client } from "@/sanity/client";
+import { contactPageQuery } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
+import PortableText from "@/components/PortableText";
 
-const ContactUsPage = () => {
+// Fallback content
+const fallback = {
+  title: "Contact Us",
+  subtitle:
+    "We're here to help—share your thoughts or inquiries with us, and we'll get back to you soon!",
+  description:
+    "Innovation drives everything we do. We continuously invest in research and development, exploring the power of micro-organisms and biostimulants to create smarter, more effective solutions. By anticipating market trends and listening closely to our customers, we deliver products that don't just perform—they elevate growing results.",
+};
+
+const ContactUsPage = async () => {
+  const data = await client.fetch(contactPageQuery);
+
+  const title = data?.title || fallback.title;
+  const bgSrc = data?.backgroundImage
+    ? urlFor(data.backgroundImage).width(1920).quality(75).url()
+    : "/img/beautiful-landscape-with-blue-sky.jpg";
+  const sidebarBgSrc = data?.sidebarBackgroundImage
+    ? urlFor(data.sidebarBackgroundImage).width(600).quality(75).url()
+    : "/img/leaves-vertical.jpg";
+  const hasBody = data?.body && data.body.length > 0;
+
   return (
     <section className="h-screen">
       <Image
-        src="/img/beautiful-landscape-with-blue-sky.jpg"
+        src={bgSrc}
         alt="Beautiful landscape with blue sky"
         fill
         quality={75}
@@ -32,19 +54,17 @@ const ContactUsPage = () => {
         <div className="flex h-full gap-24">
           <div className="flex flex-1 flex-col gap-8 py-[12vh]">
             <div>
-              <h1 className="h3">Contact Us</h1>
-              <p className="text-besgrow-green mb-4 font-semibold">
-                We&apos;re here to help—share your thoughts or inquiries with
-                us, and we&apos;ll get back to you soon!
-              </p>
-              <p className="text-besgrow-green">
-                Innovation drives everything we do. We continuously invest in
-                research and development, exploring the power of micro-organisms
-                and biostimulants to create smarter, more effective solutions.
-                By anticipating market trends and listening closely to our
-                customers, we deliver products that don&apos;t just perform—they
-                elevate growing results.
-              </p>
+              <h1 className="h3">{title}</h1>
+              {hasBody ? (
+                <PortableText value={data.body} />
+              ) : (
+                <>
+                  <p className="text-besgrow-green mb-4 font-semibold">
+                    {fallback.subtitle}
+                  </p>
+                  <p className="text-besgrow-green">{fallback.description}</p>
+                </>
+              )}
             </div>
             <div className="relative flex-1 overflow-hidden">
               <Image
@@ -59,7 +79,7 @@ const ContactUsPage = () => {
             <Image
               alt="fawn image"
               className="object-cover"
-              src="/img/leaves-vertical.jpg"
+              src={sidebarBgSrc}
               fill
             />
             <div className="mb-4 text-center">

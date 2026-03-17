@@ -3,13 +3,39 @@ import Container from "@/components/layout/Container";
 import { CiMail } from "react-icons/ci";
 import IconButton from "@/components/ui/IconButton";
 import ProductsSection from "@/components/layout/ProductsSection";
+import { client } from "@/sanity/client";
+import { homePageQuery, productCategoriesQuery } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 
-const HomePage = () => {
+// Fallback data
+const fallback = {
+  heroTitle: "besgrow",
+  heroDescription:
+    "Besgrow is a young and dynamic company, specialized in the production of high quality growing and landscaping substrates from sustainable, renewable resources",
+  heroBackgroundImage: null,
+  heroImage: null,
+};
+
+const HomePage = async () => {
+  const [data, categories] = await Promise.all([
+    client.fetch(homePageQuery),
+    client.fetch(productCategoriesQuery),
+  ]);
+
+  const heroTitle = data?.heroTitle || fallback.heroTitle;
+  const heroDescription = data?.heroDescription || fallback.heroDescription;
+  const heroBgSrc = data?.heroBackgroundImage
+    ? urlFor(data.heroBackgroundImage).width(1920).quality(50).url()
+    : "/img/beautiful-landscape-with-blue-sky.jpg";
+  const heroImgSrc = data?.heroImage
+    ? urlFor(data.heroImage).width(1000).url()
+    : "/img/flowers-wrapping-tree-trunk.png";
+
   return (
     <>
       <section className="relative h-screen">
         <Image
-          src="/img/beautiful-landscape-with-blue-sky.jpg"
+          src={heroBgSrc}
           alt="Beautiful landscape with blue sky"
           fill
           quality={50}
@@ -23,12 +49,8 @@ const HomePage = () => {
           >
             <div className="grid h-full lg:grid-cols-2 xl:grid-cols-[4fr_3fr]">
               <div className="relative z-10 flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
-                <h1 className="h1 mb-[1.5vw] lg:mb-0">besgrow</h1>
-                <p className="pb-[1.5vw]">
-                  Besgrow is a young and dynamic company, specialized in the
-                  production of high quality growing and landscaping substrates
-                  from sustainable, renewable resources
-                </p>
+                <h1 className="h1 mb-[1.5vw] lg:mb-0">{heroTitle}</h1>
+                <p className="pb-[1.5vw]">{heroDescription}</p>
                 <IconButton
                   href="/contact-us"
                   icon={
@@ -43,7 +65,7 @@ const HomePage = () => {
               </div>
               <div className="absolute inset-0 opacity-30 lg:relative lg:opacity-100">
                 <Image
-                  src="/img/flowers-wrapping-tree-trunk.png"
+                  src={heroImgSrc}
                   alt="Flowers wrapping tree trunk"
                   fill
                   className="object-cover object-left"
@@ -54,7 +76,7 @@ const HomePage = () => {
           </Container>
         </div>
       </section>
-      <ProductsSection />
+      <ProductsSection categories={categories} />
       <section className="relative overflow-hidden bg-white">
         <div className="absolute z-10 flex size-full flex-col justify-between bg-white">
           <Image

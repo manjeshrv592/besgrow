@@ -2,16 +2,127 @@
 
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import type { StructureBuilder } from "sanity/structure";
 
 import { apiVersion, dataset, projectId } from "@/sanity/env";
+import {
+  blockContent,
+  twoColumnGrid,
+  brochureButton,
+  productCategory,
+  product,
+  homePage,
+  contactPage,
+  aboutPage,
+  productsListingPage,
+  preFooter,
+  footer,
+  singletonTypes,
+} from "@/sanity/schemas";
+
+// Define the Studio structure with singletons and collections
+const structure = (S: StructureBuilder) =>
+  S.list()
+    .title("Content")
+    .items([
+      // Singleton: Home Page
+      S.listItem()
+        .title("Home Page")
+        .id("homePage")
+        .child(S.document().schemaType("homePage").documentId("homePage")),
+
+      // Singleton: Contact Page
+      S.listItem()
+        .title("Contact Page")
+        .id("contactPage")
+        .child(
+          S.document().schemaType("contactPage").documentId("contactPage")
+        ),
+
+      // Singleton: About Page
+      S.listItem()
+        .title("About Page")
+        .id("aboutPage")
+        .child(S.document().schemaType("aboutPage").documentId("aboutPage")),
+
+      // Singleton: Products Listing Page
+      S.listItem()
+        .title("Products Listing Page")
+        .id("productsListingPage")
+        .child(
+          S.document()
+            .schemaType("productsListingPage")
+            .documentId("productsListingPage")
+        ),
+
+      S.divider(),
+
+      // Collection: Product Categories
+      S.documentTypeListItem("productCategory").title("Product Categories"),
+
+      // Collection: Products
+      S.documentTypeListItem("product").title("Products"),
+
+      S.divider(),
+
+      // Singleton: Pre-Footer
+      S.listItem()
+        .title("Pre-Footer")
+        .id("preFooter")
+        .child(
+          S.document().schemaType("preFooter").documentId("preFooter")
+        ),
+
+      // Singleton: Footer
+      S.listItem()
+        .title("Footer")
+        .id("footer")
+        .child(S.document().schemaType("footer").documentId("footer")),
+    ]);
 
 export default defineConfig({
   basePath: "/studio",
   projectId,
   dataset,
-  // Add your schema types here (we'll set these up later)
   schema: {
-    types: [],
+    types: [
+      // Block types
+      blockContent,
+      twoColumnGrid,
+      brochureButton,
+      // Collection documents
+      productCategory,
+      product,
+      // Singletons
+      homePage,
+      contactPage,
+      aboutPage,
+      productsListingPage,
+      preFooter,
+      footer,
+    ],
+    // Prevent singletons from being created/deleted through the "new document" menu
+    templates: (templates) =>
+      templates.filter(
+        ({ schemaType }) =>
+          !(singletonTypes as readonly string[]).includes(schemaType)
+      ),
   },
-  plugins: [structureTool()],
+  plugins: [
+    structureTool({
+      structure,
+    }),
+  ],
+  document: {
+    // Prevent singletons from being duplicated or deleted
+    actions: (input, context) => {
+      if ((singletonTypes as readonly string[]).includes(context.schemaType)) {
+        return input.filter(
+          ({ action }) =>
+            action && ["publish", "discardChanges", "restore"].includes(action)
+        );
+      }
+      return input;
+    },
+  },
 });
