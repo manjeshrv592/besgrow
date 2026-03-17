@@ -13,7 +13,7 @@ import DistributorMap from "@/components/DistributorMap";
 
 const europeDistributors = [
   {
-    distributorName: "Besgrow Europe",
+    distributorName: "Amsterdam Office 2",
     country: "Netherlands",
     city: "Dalfsen",
     address: "De Vesting 26-A, 7722 GA",
@@ -22,7 +22,7 @@ const europeDistributors = [
     website: "www.besgrow-europe.com",
   },
   {
-    distributorName: "Besgrow Amsterdam",
+    distributorName: "Amsterdam Office 1",
     country: "Netherlands",
     city: "Amsterdam",
     address: "Canal Street 10, 1000 AA",
@@ -186,7 +186,7 @@ const DistributorsPage = () => {
           <div className="flex flex-1 flex-col gap-4 pt-[12vh] pb-[6vh]">
             <div>
               <h1 className="h3">Our Distributors</h1>
-              <p className="text-besgrow-green mb-4 font-semibold">
+              <p className="mb-4 font-semibold text-neutral-700">
                 Our global distributor network brings Besgrow expertise closer
                 to you. From Europe to every corner of the world, our trusted
                 partners ensure local access to our products.
@@ -200,7 +200,7 @@ const DistributorsPage = () => {
                 onCountryClick={(country) => setActiveCountry(country)}
               />
             </div>
-            <div className="text-besgrow-green px-12 text-center text-sm">
+            <div className="px-12 text-center text-sm text-neutral-500">
               Every distributor profile is kept accurate and up to date, powered
               directly by our content system, so you always have the latest
               information at your fingertips.

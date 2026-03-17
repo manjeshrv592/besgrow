@@ -49,7 +49,9 @@ const HomePage = async () => {
           >
             <div className="grid h-full lg:grid-cols-2 xl:grid-cols-[4fr_3fr]">
               <div className="relative z-10 flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
-                <h1 className="h1 mb-[1.5vw] lg:mb-0">{heroTitle}</h1>
+                <h1 className="h1 after:align-center after:border-besgrow-green relative mb-[1.5vw] flex items-start after:absolute after:top-[50px] after:right-[-30px] after:flex after:size-6 after:justify-center after:rounded-full after:border after:text-[10px] after:leading-[225%] after:content-['TM'] lg:mb-0">
+                  {heroTitle}
+                </h1>
                 <p className="pb-[1.5vw]">{heroDescription}</p>
                 <IconButton
                   href="/contact-us"

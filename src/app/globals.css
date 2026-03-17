@@ -20,7 +20,9 @@
   --breakpoint-8xl: 5120px;
   --breakpoint-9xl: 7680px;
 
-  --color-besgrow-green: #4a8844;
+  --color-besgrow-green-light: #99d536;
+  /* --color-besgrow-green: #99d536; */
+  --color-besgrow-green: #59c134;
 
   --font-nokora: "Nokora", sans-serif;
   --font-ronnia: "Ronnia", sans-serif;

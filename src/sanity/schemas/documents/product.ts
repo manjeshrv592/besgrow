@@ -33,8 +33,15 @@ export const product = defineType({
       description: "Hero image for this product.",
     }),
     defineField({
+      name: "initialBody",
+      title: "Initial Body (Top Section)",
+      description:
+        "The introductory rich text content displayed next to the product image, before the main body sections.",
+      type: "blockContent",
+    }),
+    defineField({
       name: "body",
-      title: "Body",
+      title: "Main Body",
       type: "blockContent",
     }),
     defineField({

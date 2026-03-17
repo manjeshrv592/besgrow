@@ -77,7 +77,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={cn("font-sans", figtree.variable)}>
-      <body className={`${nokora.variable} antialiased`}>
+      <body className={`${nokora.variable} text-neutral-700 antialiased`}>
         <Header />
         {children}
         <section className="relative py-[15vw] lg:py-[6vw]">

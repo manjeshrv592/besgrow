@@ -33,7 +33,8 @@ const components = {
       value: { left?: PortableTextBlock[]; right?: PortableTextBlock[] };
     }) => {
       return (
-        <div className="text-besgrow-green grid grid-cols-2 gap-8">
+        // <div className="text-besgrow-green grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-8 text-neutral-700">
           <div>
             {value.left && (
               <PortableTextReact value={value.left} components={components} />
@@ -122,7 +123,8 @@ const components = {
           value.children[0].text === "");
 
       return (
-        <p className={`text-besgrow-green ${isEmpty ? "mb-3" : "mb-1"}`}>
+        // <p className={`text-besgrow-green ${isEmpty ? "mb-3" : "mb-1"}`}>
+        <p className={`text-neutral-700 ${isEmpty ? "mb-3" : "mb-1"}`}>
           {!isEmpty && children}
         </p>
       );

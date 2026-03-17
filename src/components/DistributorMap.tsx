@@ -427,9 +427,9 @@ const DistributorMap = ({
                     geography={geo}
                     fill={
                       isActive
-                        ? "#22c55e"
+                        ? "#59C134"
                         : isHighlighted
-                          ? "#4ade80"
+                          ? "#99D536"
                           : "oklch(55.6% 0 0)"
                     }
                     stroke="#fff"
@@ -468,7 +468,7 @@ const DistributorMap = ({
                       },
                       hover: {
                         outline: "none",
-                        fill: isHighlighted ? "#22c55e" : "oklch(43.9% 0 0)",
+                        fill: isHighlighted ? "#B9E571" : "oklch(43.9% 0 0)",
                         cursor: isHighlighted ? "pointer" : "default",
                       },
                       pressed: { outline: "none" },

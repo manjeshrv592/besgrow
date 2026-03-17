@@ -54,8 +54,8 @@ export const productCategoriesQuery = groq`*[_type == "productCategory"] | order
 export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{
   _id,
   title,
-  slug,
-  productImage,
+  "productImage": productImage,
+  initialBody,
   body,
   category->{
     _id,

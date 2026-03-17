@@ -66,7 +66,11 @@ const fallbackProducts = [
 const fallbackGridItems = [
   {
     title: "Sphagnum Moss",
-    items: ["New Zealand Sphagnum", "Argentinian Sphagnum Moss", "Chilean Sphagnum Moss"],
+    items: [
+      "New Zealand Sphagnum",
+      "Argentinian Sphagnum Moss",
+      "Chilean Sphagnum Moss",
+    ],
   },
   {
     title: "Orchid Bark",
@@ -82,11 +86,24 @@ const fallbackGridItems = [
   },
   {
     title: "Bulk Items",
-    items: ["Wooden Stakes", "Alu Edging", "Peat Free Fibres", "Miscanthus", "Decor Bark"],
+    items: [
+      "Wooden Stakes",
+      "Alu Edging",
+      "Peat Free Fibres",
+      "Miscanthus",
+      "Decor Bark",
+    ],
   },
   {
     title: "Other",
-    items: ["Orchid Pots", "Tree Fern Pots", "Perlite", "Vermiculite", "Pine Bark", "Seramis"],
+    items: [
+      "Orchid Pots",
+      "Tree Fern Pots",
+      "Perlite",
+      "Vermiculite",
+      "Pine Bark",
+      "Seramis",
+    ],
   },
 ];
 
@@ -137,7 +154,9 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
         id: cat._id,
         title: cat.title,
         description: cat.summary || "",
-        image: cat.image ? sanityImageUrl(cat.image, 500) : `/img/products/product-${i + 1}.png`,
+        image: cat.image
+          ? sanityImageUrl(cat.image, 500)
+          : `/img/products/product-${i + 1}.png`,
         bg: cat.coverImage
           ? sanityImageUrl(cat.coverImage, 1920)
           : `/img/products/product-${i + 1}-bg.jpg`,
@@ -173,7 +192,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
         swiperInstance.slideToLoop(index);
       }
     },
-    [swiperInstance]
+    [swiperInstance],
   );
 
   return (
@@ -200,7 +219,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
         className="absolute inset-0 z-10"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.9) 100%)",
+            "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.9) 100%)",
         }}
       />
 
@@ -271,12 +290,12 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
                 <SwiperSlide key={product.id}>
                   <div className="flex items-center gap-12 px-[5vw]">
                     <div className="flex-1 text-right">
-                      <h3 className="h5 font-bold text-[#61EE4E]!">
+                      <h3 className="h5 text-besgrow-green font-bold">
                         {product.title}
                       </h3>
                       <p className="text-white">{product.description}</p>
                     </div>
-                    <div className="relative aspect-square basis-[250px] shrink-0">
+                    <div className="relative aspect-square shrink-0 basis-[250px]">
                       <Image
                         src={product.image}
                         alt={product.title}
@@ -291,7 +310,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
           </div>
 
           {/* Static grid with active highlighting */}
-          <div className="grid grid-cols-6 gap-8 text-right text-white">
+          <div className="grid grid-cols-6 text-right text-white">
             {gridItems.map((item, index) => (
               <div
                 key={item.title}
@@ -300,9 +319,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
               >
                 <h4
                   className={`mb-2 font-semibold transition-colors duration-300 ${
-                    activeIndex === index
-                      ? "text-[#61EE4E]"
-                      : "text-white"
+                    activeIndex === index ? "text-besgrow-green" : "text-white"
                   }`}
                 >
                   {item.title}
