@@ -9,7 +9,23 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import DistributorMap from "@/components/DistributorMap";
+import DistributorMap, { cityCoordinates } from "@/components/DistributorMap";
+import { MapPin, X } from "lucide-react";
+
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371; // Radius of the earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
+};
 
 const europeDistributors = [
   {
@@ -158,8 +174,65 @@ const DistributorsPage = () => {
     }
   }, [region]);
 
-  const distributors =
-    region === "europe" ? europeDistributors : restOfWorldDistributors;
+  type Distributor = {
+    distributorName: string;
+    country: string;
+    city: string;
+    address: string;
+    phone: string;
+    email: string;
+    website: string;
+  };
+
+  const distributors = (region === "europe"
+    ? europeDistributors
+    : restOfWorldDistributors) as Distributor[];
+
+  const [nearestDistributor, setNearestDistributor] = useState<Distributor | null>(null);
+  const [findingLocation, setFindingLocation] = useState(false);
+  const [locationError, setLocationError] = useState("");
+
+  const handleFindNearest = () => {
+    setFindingLocation(true);
+    setLocationError("");
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          let minDistance = Infinity;
+          let closest: Distributor | null = null;
+          
+          const allDistributors = [...europeDistributors, ...restOfWorldDistributors];
+          for (const dist of allDistributors) {
+            const coords = cityCoordinates[dist.city as keyof typeof cityCoordinates];
+            if (coords) {
+              const [distLon, distLat] = coords;
+              const distance = calculateDistance(latitude, longitude, distLat, distLon);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closest = dist as Distributor;
+              }
+            }
+          }
+          
+          setFindingLocation(false);
+          if (closest) {
+            setNearestDistributor(closest);
+            const isEurope = europeDistributors.some((d) => d.country === closest!.country);
+            setRegion(isEurope ? "europe" : "world");
+            setActiveCountry(closest.country);
+          }
+        },
+        () => {
+          setLocationError("Unable to access location. Please check browser permissions.");
+          setFindingLocation(false);
+        }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by your browser");
+      setFindingLocation(false);
+    }
+  };
 
   const groupedDistributors = distributors.reduce(
     (acc, dist) => {
@@ -197,6 +270,10 @@ const DistributorsPage = () => {
                 region={region}
                 activeCountry={activeCountry}
                 highlightedCountries={distributors.map((d) => d.country)}
+                distributorCities={distributors.map((d) => ({
+                  city: d.city,
+                  country: d.country,
+                }))}
                 onCountryClick={(country) => setActiveCountry(country)}
               />
             </div>
@@ -255,12 +332,49 @@ const DistributorsPage = () => {
                 </span>
               </div>
 
+              {/* Nearest Office Feature */}
+              <div className="mb-4 shrink-0">
+                {!nearestDistributor ? (
+                  <button
+                    onClick={handleFindNearest}
+                    disabled={findingLocation}
+                    className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-besgrow-green bg-neutral-50 px-4 py-2 text-sm font-semibold text-besgrow-green transition-colors hover:bg-besgrow-green hover:text-white disabled:pointer-events-none disabled:opacity-60"
+                  >
+                    <MapPin className="size-4" />
+                    {findingLocation ? "Locating you..." : "Find my nearest office"}
+                  </button>
+                ) : (
+                  <div className="relative rounded-2xl border border-besgrow-green/20 bg-[#f4f9f2] p-4 shadow-sm">
+                    <button 
+                       onClick={() => setNearestDistributor(null)}
+                       className="absolute right-3 top-3 text-besgrow-green/50 transition-colors hover:text-besgrow-green"
+                    >
+                      <X className="size-4" />
+                    </button>
+                    <div className="mb-2 flex items-center gap-2">
+                       <MapPin className="size-4 text-besgrow-green" />
+                       <h5 className="flex-1 text-sm font-semibold text-besgrow-green">Nearest to you</h5>
+                    </div>
+                    <div>
+                      <h6 className="font-semibold text-neutral-800">{nearestDistributor.distributorName}</h6>
+                      <p className="my-0.5 text-sm text-neutral-600">{nearestDistributor.city}, {nearestDistributor.country}</p>
+                      <p className="mb-3 text-xs text-neutral-500">{nearestDistributor.address}</p>
+                      <div className="flex flex-col gap-1 text-xs">
+                        <a href={`mailto:${nearestDistributor.email}`} className="font-medium text-blue-700 hover:underline">{nearestDistributor.email}</a>
+                        <span className="font-medium text-neutral-700">{nearestDistributor.phone}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {locationError && <p className="mt-2 text-center text-xs font-medium text-red-500">{locationError}</p>}
+              </div>
+
               {/* Accordion */}
               <div className="custom-scrollbar flex-1 overflow-y-auto pr-2 pb-4">
                 <Accordion
                   type="single"
                   collapsible
-                  value={activeCountry ?? undefined}
+                  value={activeCountry || ""}
                   onValueChange={(value) => setActiveCountry(value || null)}
                   className="flex flex-col gap-3 border-none"
                 >

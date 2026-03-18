@@ -33,8 +33,8 @@ const components = {
       value: { left?: PortableTextBlock[]; right?: PortableTextBlock[] };
     }) => {
       return (
-        // <div className="text-besgrow-green grid grid-cols-2 gap-8">
-        <div className="grid grid-cols-2 gap-8 text-neutral-700">
+        <div className="text-besgrow-green grid grid-cols-2 gap-8">
+          {/* <div className="grid grid-cols-2 gap-8 text-neutral-700"> */}
           <div>
             {value.left && (
               <PortableTextReact value={value.left} components={components} />

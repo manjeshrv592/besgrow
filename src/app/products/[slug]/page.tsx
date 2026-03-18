@@ -34,7 +34,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           )} */}
           <div className="mb-8 flex items-end gap-8">
             {/* <div className="text-besgrow-green"> */}
-            {/* This div will be replaced by PortableText */}
+
             <div className="text-neutral-700">
               {product.initialBody && (
                 <PortableText value={product.initialBody} />

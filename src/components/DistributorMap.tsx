@@ -4,6 +4,7 @@ import {
   ComposableMap,
   Geographies,
   Geography,
+  Marker,
   ZoomableGroup,
 } from "react-simple-maps";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -263,6 +264,22 @@ type MapCenter = {
   zoom: number;
 };
 
+export const cityCoordinates: Record<string, [number, number]> = {
+  Dalfsen: [6.2625, 52.5025],
+  Amsterdam: [4.9041, 52.3676],
+  Hamburg: [9.9937, 53.5511],
+  Lyon: [4.8357, 45.764],
+  Valencia: [-0.3763, 39.4699],
+  Warsaw: [21.0122, 52.2297],
+  Beijing: [116.4074, 39.9042],
+  "Buenos Aires": [-58.3816, -34.6037],
+  Portland: [-122.6587, 45.5231],
+  "São Paulo": [-46.6333, -23.5505],
+  "Cape Town": [18.4232, -33.9249],
+  Mumbai: [72.8777, 19.076],
+  Melbourne: [144.9631, -37.8136],
+};
+
 const regionDefaults: Record<string, MapCenter> = {
   europe: { coordinates: [10, 52], zoom: 3.5 },
   world: { coordinates: [20, 10], zoom: 1 },
@@ -298,6 +315,7 @@ interface DistributorMapProps {
   region: "europe" | "world";
   activeCountry: string | null;
   highlightedCountries: string[];
+  distributorCities?: { city: string; country: string }[];
   onCountryClick?: (country: string) => void;
 }
 
@@ -305,6 +323,7 @@ const DistributorMap = ({
   region,
   activeCountry,
   highlightedCountries,
+  distributorCities = [],
   onCountryClick,
 }: DistributorMapProps) => {
   const [mapCenter, setMapCenter] = useState<MapCenter>(regionDefaults[region]);
@@ -478,6 +497,24 @@ const DistributorMap = ({
               })
             }
           </Geographies>
+          {distributorCities.map((loc, idx) => {
+            const coords = cityCoordinates[loc.city];
+            if (!coords) return null;
+
+            return (
+              <Marker key={`city-${loc.city}-${idx}`} coordinates={coords}>
+                <g style={{ pointerEvents: "none" }} transform={`scale(${1 / mapCenter.zoom})`}>
+                  <path
+                    d="M0,0 C0,0 12,-15 12,-24 A12,12 0 1,0 -12,-24 C-12,-15 0,0 0,0 Z"
+                    fill="#6a7b8c"
+                    stroke="#FFFFFF"
+                    strokeWidth="2"
+                  />
+                  <circle cx="0" cy="-24" r="4.5" fill="#FFFFFF" />
+                </g>
+              </Marker>
+            );
+          })}
         </ZoomableGroup>
       </ComposableMap>
       {tooltip && (

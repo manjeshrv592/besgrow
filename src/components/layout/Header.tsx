@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { GoChevronDown } from "react-icons/go";
 import {
   Select,
@@ -25,8 +26,23 @@ const languages = [
   { value: "es", label: "Spanish", flag: "/img/flags/spanish.svg" },
 ];
 
-const Header = () => {
+interface HeaderProps {
+  productsHref?: string;
+}
+
+const Header = ({ productsHref = "/products" }: HeaderProps) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pathname = usePathname() || "";
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
+  const linkClass = (href: string) =>
+    `transition-colors duration-200 hover:text-besgrow-green ${
+      isActive(href) ? "text-besgrow-green" : ""
+    }`;
 
   return (
     <>
@@ -72,16 +88,24 @@ const Header = () => {
         >
           <ul className="flex justify-center gap-6 lg:gap-[3vw]">
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/" className={linkClass("/")}>
+                Home
+              </Link>
             </li>
             <li>
-              <Link href="/products/new-zealand-sphagnum">Products</Link>
+              <Link href={productsHref} className={linkClass("/products")}>
+                Products
+              </Link>
             </li>
             <li>
-              <Link href="/distributors">Distributors</Link>
+              <Link href="/distributors" className={linkClass("/distributors")}>
+                Distributors
+              </Link>
             </li>
             <li>
-              <Link href="/about-us">About Us</Link>
+              <Link href="/about-us" className={linkClass("/about-us")}>
+                About Us
+              </Link>
             </li>
           </ul>
         </nav>
