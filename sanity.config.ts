@@ -11,10 +11,13 @@ import {
   brochureButton,
   productCategory,
   product,
+  country,
+  distributor,
   homePage,
   contactPage,
   aboutPage,
   productsListingPage,
+  distributorsPage,
   preFooter,
   footer,
   singletonTypes,
@@ -55,6 +58,16 @@ const structure = (S: StructureBuilder) =>
             .documentId("productsListingPage")
         ),
 
+      // Singleton: Distributors Page
+      S.listItem()
+        .title("Distributors Page")
+        .id("distributorsPage")
+        .child(
+          S.document()
+            .schemaType("distributorsPage")
+            .documentId("distributorsPage")
+        ),
+
       S.divider(),
 
       // Collection: Product Categories
@@ -62,6 +75,14 @@ const structure = (S: StructureBuilder) =>
 
       // Collection: Products
       S.documentTypeListItem("product").title("Products"),
+
+      S.divider(),
+
+      // Collection: Countries
+      S.documentTypeListItem("country").title("Countries"),
+
+      // Collection: Distributors
+      S.documentTypeListItem("distributor").title("Distributors"),
 
       S.divider(),
 
@@ -93,11 +114,14 @@ export default defineConfig({
       // Collection documents
       productCategory,
       product,
+      country,
+      distributor,
       // Singletons
       homePage,
       contactPage,
       aboutPage,
       productsListingPage,
+      distributorsPage,
       preFooter,
       footer,
     ],

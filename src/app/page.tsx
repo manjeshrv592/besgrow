@@ -3,6 +3,7 @@ import Container from "@/components/layout/Container";
 import { CiMail } from "react-icons/ci";
 import IconButton from "@/components/ui/IconButton";
 import ProductsSection from "@/components/layout/ProductsSection";
+import PortableText from "@/components/PortableText";
 import { client } from "@/sanity/client";
 import { homePageQuery, productCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
@@ -14,6 +15,19 @@ const fallback = {
     "Besgrow is a young and dynamic company, specialized in the production of high quality growing and landscaping substrates from sustainable, renewable resources",
   heroBackgroundImage: null,
   heroImage: null,
+  aboutTitle: "About Besgrow",
+  aboutBody: null,
+  aboutBackgroundImage: null,
+  aboutImage: null,
+  partnersTitle: "Find Our Partners Around the World",
+  partnersDescription:
+    "Our global distributor network brings Besgrow expertise closer to you. From Europe to every corner of the world, our trusted partners ensure local access to our products, knowledge, and support.",
+  europeHeading: "Explore Europe at a glance",
+  europeDescription:
+    "An interactive map highlights our strong European presence—pinpointing distributor locations country by country. Select a location to instantly view full distributor details, including contact information and website access.",
+  worldHeading: "Beyond Europe, our reach continues",
+  worldDescription:
+    "Discover distributors across the Rest of the World through an intuitive global view or an organized country-wise listing—making it easy to connect, wherever you are.",
 };
 
 const HomePage = async () => {
@@ -30,6 +44,26 @@ const HomePage = async () => {
   const heroImgSrc = data?.heroImage
     ? urlFor(data.heroImage).width(1000).url()
     : "/img/flowers-wrapping-tree-trunk.png";
+
+  // About section
+  const aboutBgSrc = data?.aboutBackgroundImage
+    ? urlFor(data.aboutBackgroundImage).width(1920).quality(75).url()
+    : "/img/about-comp.jpg";
+  const aboutImgSrc = data?.aboutImage
+    ? urlFor(data.aboutImage).width(800).url()
+    : "/img/white-blue-orchid.png";
+  const aboutTitle = data?.aboutTitle || fallback.aboutTitle;
+  const aboutBody = data?.aboutBody || fallback.aboutBody;
+
+  // Partners preview section
+  const partnersTitle = data?.partnersTitle || fallback.partnersTitle;
+  const partnersDescription =
+    data?.partnersDescription || fallback.partnersDescription;
+  const europeHeading = data?.europeHeading || fallback.europeHeading;
+  const europeDescription =
+    data?.europeDescription || fallback.europeDescription;
+  const worldHeading = data?.worldHeading || fallback.worldHeading;
+  const worldDescription = data?.worldDescription || fallback.worldDescription;
 
   return (
     <>
@@ -84,7 +118,7 @@ const HomePage = async () => {
         <div className="absolute z-10 flex size-full flex-col justify-between bg-white">
           <Image
             fill
-            src="/img/about-comp.jpg"
+            src={aboutBgSrc}
             alt="Texture background"
             quality={75}
             className="object-cover"
@@ -99,64 +133,52 @@ const HomePage = async () => {
               <div>
                 <Image
                   className="h-auto w-[40vw] -translate-x-3 lg:translate-none"
-                  src="/img/white-blue-orchid.png"
+                  src={aboutImgSrc}
                   alt="White blue orchid"
                   width={1394}
                   height={1916}
                 />
               </div>
               <div>
-                <h2 className="h4 mb-[1vw]">About Besgrow</h2>
-                <p className="mb-[1vw]">
-                  Besgrow is recognized globally as a leader in premium
-                  substrates for orchid cultivation—trusted by hobby growers and
-                  professional horticulturists alike. Our reputation is built on
-                  quality, consistency, and a deep understanding of plant
-                  performance.
-                </p>
-                <p className="mb-[1vw]">
-                  Innovation drives everything we do. We continuously invest in
-                  research and development, exploring the power of
-                  micro-organisms and biostimulants to create smarter, more
-                  effective solutions. By anticipating market trends and
-                  listening closely to our customers, we deliver products that
-                  don't just perform—they elevate growing results.
-                </p>
-                <p>Curious to learn more?</p>
+                <h2 className="h4 mb-[1vw]">{aboutTitle}</h2>
+                {aboutBody ? (
+                  <PortableText value={aboutBody} />
+                ) : (
+                  <>
+                    <p className="mb-[1vw]">
+                      Besgrow is recognized globally as a leader in premium
+                      substrates for orchid cultivation—trusted by hobby growers
+                      and professional horticulturists alike. Our reputation is
+                      built on quality, consistency, and a deep understanding of
+                      plant performance.
+                    </p>
+                    <p className="mb-[1vw]">
+                      Innovation drives everything we do. We continuously invest
+                      in research and development, exploring the power of
+                      micro-organisms and biostimulants to create smarter, more
+                      effective solutions. By anticipating market trends and
+                      listening closely to our customers, we deliver products
+                      that don&apos;t just perform—they elevate growing results.
+                    </p>
+                    <p>Curious to learn more?</p>
+                  </>
+                )}
               </div>
             </div>
           </Container>
           <Container className="py-[15vw] lg:py-[3vw]">
             <div className="mb-[5vw] lg:text-center">
-              <h2 className="h4 mb-[1vw]">
-                Find Our Partners Around the World
-              </h2>
-              <p className="mx-auto lg:max-w-[50vw]">
-                Our global distributor network brings Besgrow expertise closer
-                to you. From Europe to every corner of the world, our trusted
-                partners ensure local access to our products, knowledge, and
-                support.
-              </p>
+              <h2 className="h4 mb-[1vw]">{partnersTitle}</h2>
+              <p className="mx-auto lg:max-w-[50vw]">{partnersDescription}</p>
             </div>
             <div className="lg:grid lg:grid-cols-2 lg:gap-[10vw] lg:px-[10vw]">
               <div className="lg:text-center">
-                <h2 className="h6 mb-[1vw]">Explore Europe at a glance</h2>
-                <p>
-                  An interactive map highlights our strong European
-                  presence—pinpointing distributor locations country by country.
-                  Select a location to instantly view full distributor details,
-                  including contact information and website access.
-                </p>
+                <h2 className="h6 mb-[1vw]">{europeHeading}</h2>
+                <p>{europeDescription}</p>
               </div>
               <div className="lg:text-center">
-                <h2 className="h6 mb-[1vw]">
-                  Beyond Europe, our reach continues
-                </h2>
-                <p>
-                  Discover distributors across the Rest of the World through an
-                  intuitive global view or an organized country-wise
-                  listing—making it easy to connect, wherever you are.
-                </p>
+                <h2 className="h6 mb-[1vw]">{worldHeading}</h2>
+                <p>{worldDescription}</p>
               </div>
             </div>
           </Container>

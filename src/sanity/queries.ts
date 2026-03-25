@@ -5,7 +5,17 @@ export const homePageQuery = groq`*[_type == "homePage"][0]{
   heroBackgroundImage,
   heroImage,
   heroTitle,
-  heroDescription
+  heroDescription,
+  aboutBackgroundImage,
+  aboutImage,
+  aboutTitle,
+  aboutBody,
+  partnersTitle,
+  partnersDescription,
+  europeHeading,
+  europeDescription,
+  worldHeading,
+  worldDescription
 }`;
 
 // ─── Contact Page ───
@@ -81,4 +91,39 @@ export const footerQuery = groq`*[_type == "footer"][0]{
   instagramUrl,
   linkedinUrl,
   copyrightText
+}`;
+
+// ─── Distributors Page (singleton) ───
+export const distributorsPageQuery = groq`*[_type == "distributorsPage"][0]{
+  backgroundImage,
+  sidebarBackgroundImage,
+  title,
+  description,
+  bottomNote,
+  europeTabLabel,
+  worldTabLabel,
+  europeSidebarHeading,
+  worldSidebarHeading,
+  sidebarSubtext
+}`;
+
+// ─── All Distributors (with expanded country) ───
+export const distributorsQuery = groq`*[_type == "distributor"] | order(distributorName asc){
+  _id,
+  distributorName,
+  city,
+  cityCoordinates,
+  address,
+  phone,
+  email,
+  website,
+  country->{
+    _id,
+    name,
+    code,
+    isoNumeric,
+    region,
+    mapCoordinates,
+    mapZoom
+  }
 }`;

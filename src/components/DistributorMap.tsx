@@ -317,6 +317,8 @@ interface DistributorMapProps {
   highlightedCountries: string[];
   distributorCities?: { city: string; country: string }[];
   onCountryClick?: (country: string) => void;
+  countryCoordinatesMap?: Record<string, { iso: string; coordinates: [number, number]; zoom: number }>;
+  cityCoordinatesMap?: Record<string, [number, number]>;
 }
 
 const DistributorMap = ({
@@ -325,7 +327,12 @@ const DistributorMap = ({
   highlightedCountries,
   distributorCities = [],
   onCountryClick,
+  countryCoordinatesMap,
+  cityCoordinatesMap,
 }: DistributorMapProps) => {
+  // Merge prop maps with hardcoded fallbacks
+  const resolvedCountryCoords = countryCoordinatesMap || countryCoordinates;
+  const resolvedCityCoords = cityCoordinatesMap || cityCoordinates;
   const [mapCenter, setMapCenter] = useState<MapCenter>(regionDefaults[region]);
   // Track whether the current move is programmatic (accordion/region click)
   // so we only apply the smooth transition for those, not manual drag/zoom
@@ -343,8 +350,8 @@ const DistributorMap = ({
     // Programmatic zoom — enable animation
     setShouldAnimate(true);
 
-    if (activeCountry && countryCoordinates[activeCountry]) {
-      const { coordinates, zoom } = countryCoordinates[activeCountry];
+    if (activeCountry && resolvedCountryCoords[activeCountry]) {
+      const { coordinates, zoom } = resolvedCountryCoords[activeCountry];
       setMapCenter({ coordinates, zoom });
     } else {
       setMapCenter(regionDefaults[region]);
@@ -359,13 +366,14 @@ const DistributorMap = ({
     return () => {
       if (animationTimeout.current) clearTimeout(animationTimeout.current);
     };
-  }, [activeCountry, region]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCountry, region, resolvedCountryCoords]);
 
   // Build ISO → country name lookup for click handling
   const isoToCountry: Record<string, string> = {};
   const highlightedISOs: string[] = [];
   for (const c of highlightedCountries) {
-    const iso = countryCoordinates[c]?.iso;
+    const iso = resolvedCountryCoords[c]?.iso;
     if (iso) {
       highlightedISOs.push(iso);
       isoToCountry[iso] = c;
@@ -374,7 +382,7 @@ const DistributorMap = ({
 
   // Get active ISO code
   const activeISO = activeCountry
-    ? countryCoordinates[activeCountry]?.iso
+    ? resolvedCountryCoords[activeCountry]?.iso
     : null;
 
   const handleMoveEnd = useCallback(
@@ -498,7 +506,7 @@ const DistributorMap = ({
             }
           </Geographies>
           {distributorCities.map((loc, idx) => {
-            const coords = cityCoordinates[loc.city];
+            const coords = resolvedCityCoords[loc.city];
             if (!coords) return null;
 
             return (
