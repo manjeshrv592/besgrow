@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import LayoutShell from "@/components/layout/LayoutShell";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Container from "@/components/layout/Container";
@@ -60,22 +61,29 @@ export default async function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", figtree.variable)}>
       <body className={`${nokora.variable} text-neutral-700 antialiased`}>
-        <Header productsHref={productsHref} />
-        {children}
-        <section className="relative py-[15vw] lg:py-[6vw]">
-          <Image
-            src={preFooterBgSrc}
-            alt="Fallen leaves"
-            fill
-            className="object-cover brightness-50"
-          />
-          <Container>
-            <div className="relative z-10 mx-auto max-w-[50vw] text-center text-white">
-              {preFooterText}
-            </div>
-          </Container>
-        </section>
-        <Footer />
+        <LayoutShell
+          header={<Header productsHref={productsHref} />}
+          footer={
+            <>
+              <section className="relative py-[15vw] lg:py-[6vw]">
+                <Image
+                  src={preFooterBgSrc}
+                  alt="Fallen leaves"
+                  fill
+                  className="object-cover brightness-50"
+                />
+                <Container>
+                  <div className="relative z-10 mx-auto max-w-[50vw] text-center text-white">
+                    {preFooterText}
+                  </div>
+                </Container>
+              </section>
+              <Footer />
+            </>
+          }
+        >
+          {children}
+        </LayoutShell>
       </body>
     </html>
   );

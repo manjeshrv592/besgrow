@@ -37,7 +37,7 @@ try {
 
 const projectId = envVars.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = envVars.NEXT_PUBLIC_SANITY_DATASET || "production";
-const token = process.env.SANITY_TOKEN;
+const token = process.env.SANITY_TOKEN || envVars.SANITY_TOKEN;
 
 if (!projectId) {
   console.error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID in .env");
