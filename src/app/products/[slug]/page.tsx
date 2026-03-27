@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { productBySlugQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import PortableText from "@/components/PortableText";
@@ -11,7 +11,10 @@ interface ProductPageProps {
 
 const ProductPage = async ({ params }: ProductPageProps) => {
   const { slug } = await params;
-  const product = await client.fetch(productBySlugQuery, { slug });
+  const { data: product } = await sanityFetch({
+    query: productBySlugQuery,
+    params: { slug },
+  });
 
   if (!product) {
     notFound();

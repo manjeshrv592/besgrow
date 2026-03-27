@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import IconButton from "@/components/ui/IconButton";
 import { CiMail } from "react-icons/ci";
 import { LuUser, LuPhone, LuBuilding2, LuMessageSquare } from "react-icons/lu";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { contactPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import PortableText from "@/components/PortableText";
@@ -20,7 +20,7 @@ const fallback = {
 };
 
 const ContactUsPage = async () => {
-  const data = await client.fetch(contactPageQuery);
+  const { data } = await sanityFetch({ query: contactPageQuery });
 
   const title = data?.title || fallback.title;
   const bgSrc = data?.backgroundImage

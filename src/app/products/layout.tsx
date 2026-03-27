@@ -7,7 +7,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import Link from "next/link";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import {
   productsListingPageQuery,
   productCategoriesQuery,
@@ -72,9 +72,9 @@ export default async function ProductsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [pageData, categories] = await Promise.all([
-    client.fetch(productsListingPageQuery),
-    client.fetch(productCategoriesQuery),
+  const [{ data: pageData }, { data: categories }] = await Promise.all([
+    sanityFetch({ query: productsListingPageQuery }),
+    sanityFetch({ query: productCategoriesQuery }),
   ]);
 
   const sidebarTitle = pageData?.sidebarTitle || fallbackSidebar.sidebarTitle;

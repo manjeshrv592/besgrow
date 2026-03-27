@@ -1,6 +1,6 @@
 import Container from "@/components/layout/Container";
 import Image from "next/image";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { aboutPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import PortableText from "@/components/PortableText";
@@ -19,7 +19,7 @@ const fallback = {
 };
 
 const AboutUsPage = async () => {
-  const data = await client.fetch(aboutPageQuery);
+  const { data } = await sanityFetch({ query: aboutPageQuery });
 
   const title = data?.title || fallback.title;
   const sidebarTitle = data?.sidebarTitle || fallback.sidebarTitle;

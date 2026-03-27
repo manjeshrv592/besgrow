@@ -1,11 +1,11 @@
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { distributorsPageQuery, distributorsQuery } from "@/sanity/queries";
 import DistributorsClient from "@/components/DistributorsClient";
 
 const DistributorsPage = async () => {
-  const [pageData, distributors] = await Promise.all([
-    client.fetch(distributorsPageQuery),
-    client.fetch(distributorsQuery),
+  const [{ data: pageData }, { data: distributors }] = await Promise.all([
+    sanityFetch({ query: distributorsPageQuery }),
+    sanityFetch({ query: distributorsQuery }),
   ]);
 
   return (

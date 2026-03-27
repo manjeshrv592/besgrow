@@ -7,7 +7,7 @@ import LayoutShell from "@/components/layout/LayoutShell";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Container from "@/components/layout/Container";
-import { client } from "@/sanity/client";
+import { sanityFetch, SanityLive } from "@/sanity/live";
 import { preFooterQuery, productCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 
@@ -41,9 +41,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [preFooterData, categories] = await Promise.all([
-    client.fetch(preFooterQuery),
-    client.fetch(productCategoriesQuery),
+  const [{ data: preFooterData }, { data: categories }] = await Promise.all([
+    sanityFetch({ query: preFooterQuery }),
+    sanityFetch({ query: productCategoriesQuery }),
   ]);
 
   const firstCategory: any = categories?.[0];
@@ -84,6 +84,7 @@ export default async function RootLayout({
         >
           {children}
         </LayoutShell>
+        <SanityLive />
       </body>
     </html>
   );

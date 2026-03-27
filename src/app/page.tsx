@@ -4,7 +4,7 @@ import { CiMail } from "react-icons/ci";
 import IconButton from "@/components/ui/IconButton";
 import ProductsSection from "@/components/layout/ProductsSection";
 import PortableText from "@/components/PortableText";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { homePageQuery, productCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 
@@ -31,9 +31,9 @@ const fallback = {
 };
 
 const HomePage = async () => {
-  const [data, categories] = await Promise.all([
-    client.fetch(homePageQuery),
-    client.fetch(productCategoriesQuery),
+  const [{ data }, { data: categories }] = await Promise.all([
+    sanityFetch({ query: homePageQuery }),
+    sanityFetch({ query: productCategoriesQuery }),
   ]);
 
   const heroTitle = data?.heroTitle || fallback.heroTitle;
