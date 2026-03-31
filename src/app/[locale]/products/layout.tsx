@@ -13,6 +13,9 @@ import {
   productCategoriesQuery,
 } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
+import { getLocalizedString } from "@/sanity/utils";
+import type { LanguageId } from "@/sanity/schemas/languages";
+import { setRequestLocale } from "next-intl/server";
 
 // Fallback data
 const fallbackSidebar = {
@@ -52,15 +55,20 @@ const fallbackCategories = [
 ];
 
 // Types
+interface InternationalizedValue {
+  _key: string;
+  value: string;
+}
+
 interface SanityProduct {
   _id: string;
-  title: string;
+  title: InternationalizedValue[];
   slug: { current: string };
 }
 
 interface SanityCategory {
   _id: string;
-  title: string;
+  title: InternationalizedValue[];
   slug: { current: string };
   products?: SanityProduct[];
 }
@@ -68,19 +76,26 @@ interface SanityCategory {
 import ProductsSidebar from "./ProductsSidebar";
 import ProductsMobileSheet from "./ProductsMobileSheet";
 
+interface ProductsLayoutProps {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}
+
 export default async function ProductsLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params,
+}: ProductsLayoutProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const lang = locale as LanguageId;
+
   const [{ data: pageData }, { data: categories }] = await Promise.all([
     sanityFetch({ query: productsListingPageQuery }),
     sanityFetch({ query: productCategoriesQuery }),
   ]);
 
-  const sidebarTitle = pageData?.sidebarTitle || fallbackSidebar.sidebarTitle;
-  const sidebarDescription =
-    pageData?.sidebarDescription || fallbackSidebar.sidebarDescription;
+  const sidebarTitle = getLocalizedString(pageData?.sidebarTitle, lang, fallbackSidebar.sidebarTitle);
+  const sidebarDescription = getLocalizedString(pageData?.sidebarDescription, lang, fallbackSidebar.sidebarDescription);
   const sidebarBgSrc = pageData?.sidebarBackgroundImage
     ? urlFor(pageData.sidebarBackgroundImage).width(600).quality(75).url()
     : "/img/products-bg.jpg";
@@ -89,9 +104,9 @@ export default async function ProductsLayout({
 
   const productCategories = useSanity
     ? (categories as SanityCategory[]).map((cat) => ({
-        title: cat.title,
+        title: getLocalizedString(cat.title, lang, "Category"),
         items: (cat.products || []).map((p) => ({
-          title: p.title,
+          title: getLocalizedString(p.title, lang, "Product"),
           slug: p.slug?.current || "",
         })),
       }))

@@ -8,6 +8,9 @@ import { LuUser, LuPhone, LuBuilding2, LuMessageSquare } from "react-icons/lu";
 import { sanityFetch } from "@/sanity/live";
 import { contactPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
+import { getLocalizedString, getLocalizedText } from "@/sanity/utils";
+import type { LanguageId } from "@/sanity/schemas/languages";
+import { setRequestLocale } from "next-intl/server";
 
 // Fallback content
 const fallback = {
@@ -20,14 +23,22 @@ const fallback = {
   sidebarDescription: "Contact Us",
 };
 
-const ContactUsPage = async () => {
+interface ContactUsPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+const ContactUsPage = async ({ params }: ContactUsPageProps) => {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const lang = locale as LanguageId;
+
   const { data } = await sanityFetch({ query: contactPageQuery });
 
-  const title = data?.title || fallback.title;
-  const leadText = data?.leadText || fallback.subtitle;
-  const contentText = data?.contentText || fallback.description;
-  const sidebarTitle = data?.sidebarTitle || fallback.sidebarTitle;
-  const sidebarDescription = data?.sidebarDescription || fallback.sidebarDescription;
+  const title = getLocalizedString(data?.title, lang, fallback.title);
+  const leadText = getLocalizedText(data?.leadText, lang, fallback.subtitle);
+  const contentText = getLocalizedText(data?.contentText, lang, fallback.description);
+  const sidebarTitle = getLocalizedString(data?.sidebarTitle, lang, fallback.sidebarTitle);
+  const sidebarDescription = getLocalizedString(data?.sidebarDescription, lang, fallback.sidebarDescription);
   const bgSrc = data?.backgroundImage
     ? urlFor(data.backgroundImage).width(1920).quality(75).url()
     : "/img/beautiful-landscape-with-blue-sky.jpg";

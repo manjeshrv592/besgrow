@@ -14,17 +14,18 @@ export const productsListingPage = defineType({
     defineField({
       name: "sidebarTitle",
       title: "Sidebar Title",
-      type: "string",
+      type: "internationalizedArrayString",
       description: 'Sidebar heading (e.g., "Product Catalog").',
     }),
     defineField({
       name: "sidebarDescription",
       title: "Sidebar Description",
-      type: "string",
+      type: "internationalizedArrayString",
       description: "Sidebar subtext below the title.",
     }),
   ],
   preview: {
+    select: { title: "title" },
     prepare() {
       return { title: "Products Listing Page" };
     },

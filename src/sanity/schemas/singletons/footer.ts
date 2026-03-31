@@ -62,6 +62,7 @@ export const footer = defineType({
     }),
   ],
   preview: {
+    select: { title: "title" },
     prepare() {
       return { title: "Footer" };
     },

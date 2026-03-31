@@ -3,10 +3,11 @@
 import React, { useState, useCallback, useMemo } from "react";
 import Container from "./Container";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import type { LanguageId } from "@/sanity/schemas/languages";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -112,18 +113,24 @@ interface SanityImage {
   asset: { _ref: string };
 }
 
+interface InternationalizedValue {
+  _key?: string;
+  language?: string;
+  value: string;
+}
+
 interface SanityProduct {
   _id: string;
-  title: string;
+  title: InternationalizedValue[];
   slug: { current: string };
   productImage?: SanityImage;
 }
 
 interface SanityCategory {
   _id: string;
-  title: string;
+  title: InternationalizedValue[];
   slug: { current: string };
-  summary?: string;
+  summary?: InternationalizedValue[];
   coverImage?: SanityImage;
   image?: SanityImage;
   products?: SanityProduct[];
@@ -131,6 +138,20 @@ interface SanityCategory {
 
 interface ProductsSectionProps {
   categories?: SanityCategory[] | null;
+  locale: LanguageId;
+}
+
+// Helper to get localized value from internationalized array
+function getLocalizedValue(
+  field: InternationalizedValue[] | undefined,
+  locale: LanguageId,
+  fallback: string = "",
+): string {
+  if (!field || !Array.isArray(field)) return fallback;
+  const localized = field.find((item) => item._key === locale || item.language === locale);
+  if (localized?.value) return localized.value;
+  const english = field.find((item) => item._key === "en" || item.language === "en");
+  return english?.value || fallback;
 }
 
 // Helper to build Sanity image URL (client-side, simple approach)
@@ -141,7 +162,7 @@ function sanityImageUrl(image: SanityImage, width: number = 800): string {
   return `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}/${id}-${dimensions}.${format}?w=${width}`;
 }
 
-const ProductsSection = ({ categories }: ProductsSectionProps) => {
+const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
@@ -152,8 +173,8 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
     if (useSanity) {
       return categories.map((cat, i) => ({
         id: cat._id,
-        title: cat.title,
-        description: cat.summary || "",
+        title: getLocalizedValue(cat.title, locale, `Product ${i + 1}`),
+        description: getLocalizedValue(cat.summary, locale, ""),
         image: cat.image
           ? sanityImageUrl(cat.image, 500)
           : `/img/products/product-${i + 1}.png`,
@@ -163,15 +184,15 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
       }));
     }
     return fallbackProducts;
-  }, [useSanity, categories]);
+  }, [useSanity, categories, locale]);
 
   // Build grid data from Sanity categories (with their products) or fallback
   const gridItems = useMemo(() => {
     if (useSanity) {
       return categories.map((cat) => ({
-        title: cat.title,
+        title: getLocalizedValue(cat.title, locale, "Category"),
         items: (cat.products || []).map((p) => ({
-          title: p.title,
+          title: getLocalizedValue(p.title, locale, "Product"),
           slug: p.slug?.current || "",
         })),
       }));
@@ -180,7 +201,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
       title: g.title,
       items: g.items.map((item) => ({ title: item, slug: "" })),
     }));
-  }, [useSanity, categories]);
+  }, [useSanity, categories, locale]);
 
   const handleSlideChange = useCallback((swiper: SwiperType) => {
     setActiveIndex(swiper.realIndex);
@@ -289,13 +310,15 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
               {products.map((product) => (
                 <SwiperSlide key={product.id}>
                   <div className="flex flex-col items-start gap-6 px-0 lg:flex-row lg:items-center lg:gap-12 lg:px-[5vw]">
-                    <div className="order-1 flex-1 text-left lg:order-none lg:text-right">
+                    <div className="order-1 flex-1 text-left lg:order-0 lg:text-right">
                       <h3 className="h5 text-besgrow-green font-bold">
                         {product.title}
                       </h3>
-                      <p className="mt-2 text-sm text-white lg:mt-0 lg:text-base">{product.description}</p>
+                      <p className="mt-2 text-sm text-white lg:mt-0 lg:text-base">
+                        {product.description}
+                      </p>
                     </div>
-                    <div className="relative order-2 mx-auto aspect-square w-[200px] shrink-0 lg:order-none lg:mx-0 lg:w-auto lg:basis-[250px]">
+                    <div className="relative order-2 mx-auto aspect-square w-[200px] shrink-0 lg:order-0 lg:mx-0 lg:w-auto lg:basis-[250px]">
                       <Image
                         src={product.image}
                         alt={product.title}
@@ -320,7 +343,9 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
                 >
                   <h4
                     className={`mb-1 font-semibold transition-colors duration-300 lg:mb-2 ${
-                      activeIndex === index ? "text-besgrow-green" : "text-white"
+                      activeIndex === index
+                        ? "text-besgrow-green"
+                        : "text-white"
                     }`}
                   >
                     {item.title}
@@ -332,7 +357,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
                           {subItem.slug ? (
                             <Link
                               href={`/products/${subItem.slug}`}
-                              className="transition-colors hover:text-white text-sm"
+                              className="text-sm transition-colors hover:text-white"
                             >
                               {subItem.title}
                             </Link>

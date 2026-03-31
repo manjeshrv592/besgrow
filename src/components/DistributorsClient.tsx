@@ -13,6 +13,7 @@ import DistributorMap from "@/components/DistributorMap";
 import { MapPin, X } from "lucide-react";
 import { urlFor } from "@/sanity/image";
 import DistributorsMobileSheet from "@/components/DistributorsMobileSheet";
+import type { LanguageId } from "@/sanity/schemas/languages";
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const R = 6371;
@@ -51,18 +52,32 @@ export type SanityCountryWithDistributors = {
   distributors?: SanityDistributorEntry[];
 };
 
+type InternationalizedValue = {
+  _key?: string;
+  language?: string;
+  value: string;
+};
+
 export type SanityDistributorsPage = {
   backgroundImage?: any;
   sidebarBackgroundImage?: any;
-  title?: string;
-  description?: string;
-  bottomNote?: string;
-  europeTabLabel?: string;
-  worldTabLabel?: string;
-  europeSidebarHeading?: string;
-  worldSidebarHeading?: string;
-  sidebarSubtext?: string;
+  title?: InternationalizedValue[];
+  description?: InternationalizedValue[];
+  bottomNote?: InternationalizedValue[];
+  europeTabLabel?: InternationalizedValue[];
+  worldTabLabel?: InternationalizedValue[];
+  europeSidebarHeading?: InternationalizedValue[];
+  worldSidebarHeading?: InternationalizedValue[];
+  sidebarSubtext?: InternationalizedValue[];
 };
+
+function getLocalizedValue(field: InternationalizedValue[] | undefined, locale: LanguageId, fallback: string = ""): string {
+  if (!field || !Array.isArray(field)) return fallback;
+  const localized = field.find((item) => item._key === locale || item.language === locale);
+  if (localized?.value) return localized.value;
+  const english = field.find((item) => item._key === "en" || item.language === "en");
+  return english?.value || fallback;
+}
 
 // Build lookup maps from Sanity country data
 // This ensures all countries with serviceAvailable have their ISO code for map highlighting
@@ -101,9 +116,10 @@ function buildCityCoordinates(countries: SanityCountryWithDistributors[]) {
 interface DistributorsClientProps {
   pageData: SanityDistributorsPage | null;
   countries: SanityCountryWithDistributors[];
+  locale: LanguageId;
 }
 
-const DistributorsClient = ({ pageData, countries }: DistributorsClientProps) => {
+const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientProps) => {
   const [region, setRegion] = useState<"europe" | "world">("europe");
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const europeRef = useRef<HTMLButtonElement>(null);
@@ -239,20 +255,27 @@ const DistributorsClient = ({ pageData, countries }: DistributorsClientProps) =>
     {} as Record<string, FlatDistributor[]>,
   );
 
-  // Page-level fallbacks
-  const title = pageData?.title || "Our Distributors";
-  const description =
-    pageData?.description ||
-    "Our global distributor network brings Besgrow expertise closer to you. From Europe to every corner of the world, our trusted partners ensure local access to our products.";
-  const bottomNote =
-    pageData?.bottomNote ||
-    "Every distributor profile is kept accurate and up to date, powered directly by our content system, so you always have the latest information at your fingertips.";
-  const europeTabLabel = pageData?.europeTabLabel || "Europe";
-  const worldTabLabel = pageData?.worldTabLabel || "Rest of the world";
-  const europeSidebarHeading = pageData?.europeSidebarHeading || "European Locations";
-  const worldSidebarHeading = pageData?.worldSidebarHeading || "Around the World Locations";
-  const sidebarSubtext =
-    pageData?.sidebarSubtext || "Find our offices and get in touch with our local teams";
+  // Page-level fallbacks with localization
+  const title = getLocalizedValue(pageData?.title, locale, "Our Distributors");
+  const description = getLocalizedValue(
+    pageData?.description,
+    locale,
+    "Our global distributor network brings Besgrow expertise closer to you. From Europe to every corner of the world, our trusted partners ensure local access to our products."
+  );
+  const bottomNote = getLocalizedValue(
+    pageData?.bottomNote,
+    locale,
+    "Every distributor profile is kept accurate and up to date, powered directly by our content system, so you always have the latest information at your fingertips."
+  );
+  const europeTabLabel = getLocalizedValue(pageData?.europeTabLabel, locale, "Europe");
+  const worldTabLabel = getLocalizedValue(pageData?.worldTabLabel, locale, "Rest of the world");
+  const europeSidebarHeading = getLocalizedValue(pageData?.europeSidebarHeading, locale, "European Locations");
+  const worldSidebarHeading = getLocalizedValue(pageData?.worldSidebarHeading, locale, "Around the World Locations");
+  const sidebarSubtext = getLocalizedValue(
+    pageData?.sidebarSubtext,
+    locale,
+    "Find our offices and get in touch with our local teams"
+  );
 
   const bgSrc = pageData?.backgroundImage
     ? urlFor(pageData.backgroundImage).width(1920).quality(50).url()

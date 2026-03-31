@@ -8,21 +8,29 @@ export const productCategory = defineType({
     defineField({
       name: "title",
       title: "Title",
-      type: "string",
-      validation: (rule) => rule.required(),
+      type: "internationalizedArrayString",
     }),
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        maxLength: 96,
+        source: (doc: any) => {
+          if (Array.isArray(doc.title)) {
+            const enTitle = doc.title.find((t: any) => t._key === "en" || t.language === "en");
+            return enTitle?.value || doc.title[0]?.value || "";
+          }
+          return typeof doc.title === "string" ? doc.title : "";
+        },
+      },
       validation: (rule) => rule.required(),
+      description: "URL-friendly identifier (not translated)",
     }),
     defineField({
       name: "summary",
       title: "Summary",
-      type: "text",
-      rows: 3,
+      type: "internationalizedArrayText",
       description: "Short description shown in the home page product carousel.",
     }),
     defineField({
@@ -57,6 +65,15 @@ export const productCategory = defineType({
     select: {
       title: "title",
       media: "image",
+    },
+    prepare({ title, media }) {
+      const enTitle = Array.isArray(title)
+        ? title.find((t: any) => t._key === "en" || t.language === "en")?.value || title[0]?.value || "Untitled"
+        : title || "Untitled";
+      return {
+        title: enTitle,
+        media,
+      };
     },
   },
 });

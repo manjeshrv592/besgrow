@@ -8,15 +8,24 @@ export const product = defineType({
     defineField({
       name: "title",
       title: "Title",
-      type: "string",
-      validation: (rule) => rule.required(),
+      type: "internationalizedArrayString",
     }),
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        maxLength: 96,
+        source: (doc: any) => {
+          if (Array.isArray(doc.title)) {
+            const enTitle = doc.title.find((t: any) => t._key === "en" || t.language === "en");
+            return enTitle?.value || doc.title[0]?.value || "";
+          }
+          return typeof doc.title === "string" ? doc.title : "";
+        },
+      },
       validation: (rule) => rule.required(),
+      description: "URL-friendly identifier (not translated)",
     }),
     defineField({
       name: "category",
@@ -37,12 +46,12 @@ export const product = defineType({
       title: "Initial Body (Top Section)",
       description:
         "The introductory rich text content displayed next to the product image, before the main body sections.",
-      type: "blockContent",
+      type: "internationalizedArrayBlockContent",
     }),
     defineField({
       name: "body",
       title: "Main Body",
-      type: "blockContent",
+      type: "internationalizedArrayBlockContent",
     }),
     defineField({
       name: "order",
@@ -65,9 +74,17 @@ export const product = defineType({
       media: "productImage",
     },
     prepare({ title, category, media }) {
+      const enTitle = Array.isArray(title)
+        ? title.find((t: any) => t._key === "en" || t.language === "en")?.value || title[0]?.value || "Untitled"
+        : title || "Untitled";
+
+      const enCategory = Array.isArray(category)
+        ? category.find((t: any) => t._key === "en" || t.language === "en")?.value || category[0]?.value
+        : category;
+
       return {
-        title,
-        subtitle: category ? `Category: ${category}` : "No category",
+        title: enTitle,
+        subtitle: enCategory ? `Category: ${enCategory}` : "No category",
         media,
       };
     },

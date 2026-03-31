@@ -3,6 +3,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import type { StructureBuilder } from "sanity/structure";
+import { internationalizedArray } from "sanity-plugin-internationalized-array";
 
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 import {
@@ -21,6 +22,7 @@ import {
   footer,
   singletonTypes,
 } from "@/sanity/schemas";
+import { languages } from "@/sanity/schemas/languages";
 
 // Define the Studio structure with singletons and collections
 const structure = (S: StructureBuilder) =>
@@ -130,6 +132,24 @@ export default defineConfig({
   plugins: [
     structureTool({
       structure,
+    }),
+    internationalizedArray({
+      languages,
+      defaultLanguages: ["en"],
+      fieldTypes: ["string", "text", "blockContent"],
+      languageFilter: {
+        documentTypes: [
+          "homePage",
+          "contactPage",
+          "aboutPage",
+          "productsListingPage",
+          "distributorsPage",
+          "preFooter",
+          "footer",
+          "product",
+          "productCategory",
+        ],
+      },
     }),
   ],
   document: {

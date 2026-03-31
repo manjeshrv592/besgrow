@@ -1,15 +1,14 @@
 "use client";
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { GoChevronDown } from "react-icons/go";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -28,11 +27,74 @@ const languages = [
 
 interface HeaderProps {
   productsHref?: string;
+  locale: Locale;
 }
 
-const Header = ({ productsHref = "/products" }: HeaderProps) => {
+const LanguageSwitcher = ({ currentLocale }: { currentLocale: Locale }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleLanguageChange = (newLocale: string) => {
+    router.replace(pathname, { locale: newLocale as Locale });
+  };
+
+  return (
+    <span>
+      <Select value={currentLocale} onValueChange={handleLanguageChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {languages.map((lang) => (
+              <SelectItem key={lang.value} value={lang.value}>
+                <Image
+                  className="size-5 rounded-full object-cover"
+                  src={lang.flag}
+                  alt={lang.label}
+                  width={20}
+                  height={20}
+                />
+                <span className="uppercase">{lang.value}</span>
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </span>
+  );
+};
+
+const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname() || "";
+
+  useEffect(() => {
+    let previousScrollPosition = typeof window !== "undefined" ? window.scrollY : 0;
+
+    const handleScroll = () => {
+      const currentScrollPosition = window.scrollY;
+
+      if (currentScrollPosition > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      if (currentScrollPosition > previousScrollPosition && currentScrollPosition > 100) {
+        setIsVisible(false); // Hide on scroll down
+      } else if (previousScrollPosition > currentScrollPosition) {
+        setIsVisible(true);  // Show on scroll up
+      }
+
+      previousScrollPosition = currentScrollPosition;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -46,7 +108,11 @@ const Header = ({ productsHref = "/products" }: HeaderProps) => {
 
   return (
     <>
-      <header className="absolute top-0 left-0 z-50 flex w-full items-center justify-between px-4 lg:grid lg:grid-cols-[1fr_max-content_1fr]">
+      <header
+        className={`fixed top-0 left-0 z-50 flex w-full items-center justify-between px-4 transition-all duration-300 ease-in-out lg:grid lg:grid-cols-[1fr_max-content_1fr] ${
+          isVisible || mobileNavOpen ? "translate-y-0" : "-translate-y-full"
+        } ${isScrolled ? "bg-white/95 shadow-sm backdrop-blur-md" : "bg-transparent"}`}
+      >
         <Link href="/">
           <Image
             className="h-[5vw] min-h-12 w-auto"
@@ -130,33 +196,7 @@ const Header = ({ productsHref = "/products" }: HeaderProps) => {
               Contact Us
             </IconButton>
           </span>
-          <span>
-            <Select defaultValue="en">
-              {/* <SelectTrigger className="w-full lg:min-w-32"> */}
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {languages.map((lang) => (
-                    <SelectItem key={lang.value} value={lang.value}>
-                      <Image
-                        className="size-5 rounded-full object-cover"
-                        src={lang.flag}
-                        alt={lang.label}
-                        width={20}
-                        height={20}
-                      />
-                      {/* <span className="hidden lg:inline-block">
-                        {lang.label}
-                      </span> */}
-                      <span className="uppercase">{lang.value}</span>
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </span>
+          <LanguageSwitcher currentLocale={locale} />
         </div>
       </header>
     </>

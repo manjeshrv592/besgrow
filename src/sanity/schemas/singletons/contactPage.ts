@@ -21,19 +21,18 @@ export const contactPage = defineType({
     defineField({
       name: "title",
       title: "Title",
-      type: "string",
-      validation: (rule) => rule.required(),
+      type: "internationalizedArrayString",
     }),
     defineField({
       name: "leadText",
       title: "Lead Text",
-      type: "text",
+      type: "internationalizedArrayText",
       description: "Short introductory text displayed prominently.",
     }),
     defineField({
       name: "contentText",
       title: "Content Text",
-      type: "text",
+      type: "internationalizedArrayText",
       description: "Main content text.",
     }),
     defineField({
@@ -45,17 +44,18 @@ export const contactPage = defineType({
     defineField({
       name: "sidebarTitle",
       title: "Sidebar Title",
-      type: "string",
+      type: "internationalizedArrayString",
       description: "Title displayed in the sidebar panel.",
     }),
     defineField({
       name: "sidebarDescription",
       title: "Sidebar Description",
-      type: "string",
+      type: "internationalizedArrayString",
       description: "Description displayed below the sidebar title.",
     }),
   ],
   preview: {
+    select: { title: "title" },
     prepare() {
       return { title: "Contact Page" };
     },

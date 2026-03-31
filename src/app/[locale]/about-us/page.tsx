@@ -3,6 +3,9 @@ import Image from "next/image";
 import { sanityFetch } from "@/sanity/live";
 import { aboutPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
+import { getLocalizedString, getLocalizedText } from "@/sanity/utils";
+import type { LanguageId } from "@/sanity/schemas/languages";
+import { setRequestLocale } from "next-intl/server";
 
 // Fallback content
 const fallback = {
@@ -17,15 +20,22 @@ const fallback = {
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2505003.343214702!2d2.6408539569325526!3d52.18355887908633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c609c3db87e4bb%3A0xb3a175ceffbd0a9f!2sNetherlands!5e0!3m2!1sen!2sin!4v1773103016499!5m2!1sen!2sin",
 };
 
-const AboutUsPage = async () => {
+interface AboutUsPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+const AboutUsPage = async ({ params }: AboutUsPageProps) => {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const lang = locale as LanguageId;
+
   const { data } = await sanityFetch({ query: aboutPageQuery });
 
-  const title = data?.title || fallback.title;
-  const leadText = data?.leadText || fallback.subtitle;
-  const contentText = data?.contentText || fallback.description;
-  const sidebarTitle = data?.sidebarTitle || fallback.sidebarTitle;
-  const sidebarDescription =
-    data?.sidebarDescription || fallback.sidebarDescription;
+  const title = getLocalizedString(data?.title, lang, fallback.title);
+  const leadText = getLocalizedText(data?.leadText, lang, fallback.subtitle);
+  const contentText = getLocalizedText(data?.contentText, lang, fallback.description);
+  const sidebarTitle = getLocalizedString(data?.sidebarTitle, lang, fallback.sidebarTitle);
+  const sidebarDescription = getLocalizedString(data?.sidebarDescription, lang, fallback.sidebarDescription);
   const googleMapsUrl = data?.googleMapsUrl || fallback.googleMapsUrl;
   const bgSrc = data?.backgroundImage
     ? urlFor(data.backgroundImage).width(1920).quality(75).url()

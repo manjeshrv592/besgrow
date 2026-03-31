@@ -14,11 +14,11 @@ export const preFooter = defineType({
     defineField({
       name: "text",
       title: "Text",
-      type: "text",
-      rows: 3,
+      type: "internationalizedArrayText",
     }),
   ],
   preview: {
+    select: { title: "title" },
     prepare() {
       return { title: "Pre-Footer" };
     },
