@@ -27,29 +27,29 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
   return (
     <div>
-      <div className="relative mb-8 flex gap-10">
-        <div className="flex-1">
+      <div className="relative mb-8">
+        <div className="flex-1 pt-10 lg:pt-0">
           <h1 className="h2">{product.title}</h1>
           {/* {product.category && (
             <p className="text-besgrow-green/60 mb-2 text-sm font-medium">
               {product.category.title}
             </p>
           )} */}
-          <div className="mb-8 flex items-end gap-8">
+          <div className="mb-8 flex flex-col-reverse items-start gap-6 lg:flex-row lg:items-end lg:gap-8">
             {/* <div className="text-besgrow-green"> */}
 
-            <div className="text-neutral-700">
+            <div className="order-2 text-neutral-700 lg:order-1">
               {product.initialBody && (
                 <PortableText value={product.initialBody} />
               )}
             </div>
             {productImageSrc && (
-              <div className="mb-6 shrink-0">
+              <div className="order-1 mb-4 shrink-0 lg:order-2 lg:mb-6">
                 <Image
                   alt={product.title}
                   width={676}
                   height={582}
-                  className="h-auto w-64"
+                  className="h-auto w-48 lg:w-64"
                   src={productImageSrc}
                 />
               </div>

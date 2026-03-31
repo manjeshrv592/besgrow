@@ -3,7 +3,6 @@ import Image from "next/image";
 import { sanityFetch } from "@/sanity/live";
 import { aboutPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
-import PortableText from "@/components/PortableText";
 
 // Fallback content
 const fallback = {
@@ -22,6 +21,8 @@ const AboutUsPage = async () => {
   const { data } = await sanityFetch({ query: aboutPageQuery });
 
   const title = data?.title || fallback.title;
+  const leadText = data?.leadText || fallback.subtitle;
+  const contentText = data?.contentText || fallback.description;
   const sidebarTitle = data?.sidebarTitle || fallback.sidebarTitle;
   const sidebarDescription =
     data?.sidebarDescription || fallback.sidebarDescription;
@@ -32,10 +33,12 @@ const AboutUsPage = async () => {
   const sidebarBgSrc = data?.sidebarBackgroundImage
     ? urlFor(data.sidebarBackgroundImage).width(600).quality(75).url()
     : "/img/leaves-vertical.jpg";
-  const hasBody = data?.body && data.body.length > 0;
+  const mainImageSrc = data?.mainImage
+    ? urlFor(data.mainImage).width(800).quality(75).url()
+    : null;
 
   return (
-    <section className="relative lg:h-screen">
+    <section className="relative lg:h-screen pt-10 lg:pt-0">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -45,26 +48,30 @@ const AboutUsPage = async () => {
       />
 
       <Container className="relative z-20 h-full">
-        <div className="h-full gap-24 lg:flex">
-          <div className="flex flex-1 flex-col gap-8 pt-[12vh]">
+        <div className="flex flex-col lg:h-full lg:flex-row lg:gap-24">
+          <div className="flex flex-col gap-8 px-4 py-8 lg:flex-1 lg:px-0 lg:py-[12vh]">
             <div>
               <h1 className="h3">{title}</h1>
-              {hasBody ? (
-                <PortableText value={data.body} />
-              ) : (
-                <>
-                  <p className="text-besgrow-green mb-4 font-semibold">
-                    {fallback.subtitle}
-                  </p>
-                  <p className="text-besgrow-green">{fallback.description}</p>
-                </>
-              )}
+              <p className=" mb-4 font-semibold">
+                {leadText}
+              </p>
+              <p className="">{contentText}</p>
             </div>
+            {mainImageSrc && (
+              <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-auto lg:flex-1">
+                <Image
+                  src={mainImageSrc}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
           </div>
-          <div className="relative flex flex-col justify-end border border-y-neutral-300 py-[12vh] lg:basis-[27%]">
+          <div className="relative flex flex-col justify-end py-8 lg:border lg:border-y-neutral-300 lg:py-[12vh] lg:basis-[27%]">
             <Image
               alt="fawn image"
-              className="object-cover"
+              className="hidden object-cover lg:block"
               src={sidebarBgSrc}
               fill
             />
@@ -75,7 +82,7 @@ const AboutUsPage = async () => {
                 </h4>
                 <span className="text-besgrow-green">{sidebarDescription}</span>
               </div>
-              <div className="h-[60vh]">
+              <div className="h-[50vh] lg:h-[60vh]">
                 <iframe
                   src={googleMapsUrl}
                   width="100%"

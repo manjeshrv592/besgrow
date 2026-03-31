@@ -33,7 +33,7 @@ const components = {
       value: { left?: PortableTextBlock[]; right?: PortableTextBlock[] };
     }) => {
       return (
-        <div className="text-besgrow-green grid grid-cols-2 gap-8">
+        <div className="text-besgrow-green grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {/* <div className="grid grid-cols-2 gap-8 text-neutral-700"> */}
           <div>
             {value.left && (

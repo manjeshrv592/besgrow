@@ -24,9 +24,22 @@ export const aboutPage = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "body",
-      title: "Body",
-      type: "blockContent",
+      name: "leadText",
+      title: "Lead Text",
+      type: "text",
+      description: "Short introductory text displayed prominently.",
+    }),
+    defineField({
+      name: "contentText",
+      title: "Content Text",
+      type: "text",
+      description: "Main content text.",
+    }),
+    defineField({
+      name: "mainImage",
+      title: "Main Image",
+      type: "image",
+      options: { hotspot: true },
     }),
     defineField({
       name: "sidebarTitle",

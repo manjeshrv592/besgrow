@@ -88,22 +88,22 @@ const Header = ({ productsHref = "/products" }: HeaderProps) => {
         >
           <ul className="flex justify-center gap-6 lg:gap-[3vw]">
             <li>
-              <Link href="/" className={linkClass("/")}>
+              <Link href="/" className={linkClass("/")} onClick={() => setMobileNavOpen(false)}>
                 Home
               </Link>
             </li>
             <li>
-              <Link href={productsHref} className={linkClass("/products")}>
+              <Link href={productsHref} className={linkClass("/products")} onClick={() => setMobileNavOpen(false)}>
                 Products
               </Link>
             </li>
             <li>
-              <Link href="/distributors" className={linkClass("/distributors")}>
+              <Link href="/distributors" className={linkClass("/distributors")} onClick={() => setMobileNavOpen(false)}>
                 Distributors
               </Link>
             </li>
             <li>
-              <Link href="/about-us" className={linkClass("/about-us")}>
+              <Link href="/about-us" className={linkClass("/about-us")} onClick={() => setMobileNavOpen(false)}>
                 About Us
               </Link>
             </li>
@@ -111,8 +111,10 @@ const Header = ({ productsHref = "/products" }: HeaderProps) => {
         </nav>
         <div className="flex items-center justify-end gap-2 text-right">
           <span className="lg:hidden">
-            <Button size="icon">
-              <CiMail strokeWidth={1} />
+            <Button size="icon" asChild>
+              <Link href="/contact-us">
+                <CiMail strokeWidth={1} />
+              </Link>
             </Button>
           </span>
           <span className="hidden -translate-x-27 lg:block">

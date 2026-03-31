@@ -6,8 +6,8 @@ export { brochureButton } from "./blocks/brochureButton";
 // Collection documents
 export { productCategory } from "./documents/productCategory";
 export { product } from "./documents/product";
-export { country } from "./documents/country";
-export { distributor } from "./documents/distributor";
+export { country, extractCoordsFromGoogleMapsUrl } from "./documents/country";
+// Note: distributor is now embedded within country schema as an array
 
 // Singletons
 export { homePage } from "./singletons/homePage";

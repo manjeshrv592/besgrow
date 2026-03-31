@@ -12,6 +12,7 @@ import {
 import DistributorMap from "@/components/DistributorMap";
 import { MapPin, X } from "lucide-react";
 import { urlFor } from "@/sanity/image";
+import DistributorsMobileSheet from "@/components/DistributorsMobileSheet";
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const R = 6371;
@@ -27,25 +28,27 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-// Types for Sanity data
-export type SanityDistributor = {
-  _id: string;
+// Types for Sanity data (new embedded structure)
+export type SanityDistributorEntry = {
+  _key: string;
   distributorName: string;
   city: string;
-  cityCoordinates?: { lng: number; lat: number };
+  coordinates?: { lat: number; lng: number };
+  googleMapsLink?: string;
   address?: string;
   phone?: string;
   email?: string;
   website?: string;
-  country: {
-    _id: string;
-    name: string;
-    code: string;
-    isoNumeric?: string;
-    region: "europe" | "restOfWorld";
-    mapCoordinates?: { lng: number; lat: number };
-    mapZoom?: number;
-  };
+};
+
+export type SanityCountryWithDistributors = {
+  _id: string;
+  name: string;
+  code: string;
+  isoNumeric?: string;
+  isEurope: boolean;
+  serviceAvailable: boolean;
+  distributors?: SanityDistributorEntry[];
 };
 
 export type SanityDistributorsPage = {
@@ -62,26 +65,34 @@ export type SanityDistributorsPage = {
 };
 
 // Build lookup maps from Sanity country data
-function buildCountryCoordinates(distributors: SanityDistributor[]) {
+// This ensures all countries with serviceAvailable have their ISO code for map highlighting
+function buildCountryCoordinates(countries: SanityCountryWithDistributors[]) {
   const coords: Record<string, { iso: string; coordinates: [number, number]; zoom: number }> = {};
-  for (const dist of distributors) {
-    const c = dist.country;
-    if (c && c.mapCoordinates && !coords[c.name]) {
-      coords[c.name] = {
-        iso: c.isoNumeric || "",
-        coordinates: [c.mapCoordinates.lng, c.mapCoordinates.lat],
-        zoom: c.mapZoom || 4,
+  for (const country of countries) {
+    if (!coords[country.name] && country.isoNumeric) {
+      // Get first distributor's coordinates as country center, or use default
+      const firstDistWithCoords = country.distributors?.find((d) => d.coordinates);
+      const defaultCoords: [number, number] = firstDistWithCoords?.coordinates 
+        ? [firstDistWithCoords.coordinates.lng, firstDistWithCoords.coordinates.lat]
+        : [0, 0]; // Fallback - map will still highlight the country
+      
+      coords[country.name] = {
+        iso: country.isoNumeric,
+        coordinates: defaultCoords,
+        zoom: 6,
       };
     }
   }
   return coords;
 }
 
-function buildCityCoordinates(distributors: SanityDistributor[]) {
+function buildCityCoordinates(countries: SanityCountryWithDistributors[]) {
   const coords: Record<string, [number, number]> = {};
-  for (const dist of distributors) {
-    if (dist.cityCoordinates && !coords[dist.city]) {
-      coords[dist.city] = [dist.cityCoordinates.lng, dist.cityCoordinates.lat];
+  for (const country of countries) {
+    for (const dist of country.distributors || []) {
+      if (dist.coordinates && !coords[dist.city]) {
+        coords[dist.city] = [dist.coordinates.lng, dist.coordinates.lat];
+      }
     }
   }
   return coords;
@@ -89,29 +100,25 @@ function buildCityCoordinates(distributors: SanityDistributor[]) {
 
 interface DistributorsClientProps {
   pageData: SanityDistributorsPage | null;
-  distributors: SanityDistributor[];
+  countries: SanityCountryWithDistributors[];
 }
 
-const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps) => {
+const DistributorsClient = ({ pageData, countries }: DistributorsClientProps) => {
   const [region, setRegion] = useState<"europe" | "world">("europe");
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const europeRef = useRef<HTMLButtonElement>(null);
   const worldRef = useRef<HTMLButtonElement>(null);
   const [pillStyle, setPillStyle] = useState({ width: 0, left: 0 });
 
-  // Separate distributors by region
-  const europeDistributors = distributors.filter(
-    (d) => d.country?.region === "europe"
-  );
-  const restOfWorldDistributors = distributors.filter(
-    (d) => d.country?.region === "restOfWorld"
-  );
+  // Separate countries by region
+  const europeCountries = countries.filter((c) => c.isEurope);
+  const restOfWorldCountries = countries.filter((c) => !c.isEurope);
 
-  const currentDistributors = region === "europe" ? europeDistributors : restOfWorldDistributors;
+  const currentCountries = region === "europe" ? europeCountries : restOfWorldCountries;
 
   // Build coordinate lookup maps from Sanity data
-  const countryCoordinates = buildCountryCoordinates(distributors);
-  const cityCoordinates = buildCityCoordinates(distributors);
+  const countryCoordinates = buildCountryCoordinates(countries);
+  const cityCoordinates = buildCityCoordinates(countries);
 
   useEffect(() => {
     const activeRef = region === "europe" ? europeRef : worldRef;
@@ -122,7 +129,7 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
       });
     }
     if (region === "europe") {
-      setActiveCountry(europeDistributors[0]?.country?.name ?? null);
+      setActiveCountry(europeCountries[0]?.name ?? null);
     } else {
       setActiveCountry(null);
     }
@@ -137,17 +144,22 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
     phone: string;
     email: string;
     website: string;
+    coordinates?: { lat: number; lng: number };
   };
 
-  const flatDistributors: FlatDistributor[] = currentDistributors.map((d) => ({
-    distributorName: d.distributorName,
-    countryName: d.country?.name || "",
-    city: d.city,
-    address: d.address || "",
-    phone: d.phone || "",
-    email: d.email || "",
-    website: d.website || "",
-  }));
+  // Flatten distributors from current countries
+  const flatDistributors: FlatDistributor[] = currentCountries.flatMap((country) =>
+    (country.distributors || []).map((d) => ({
+      distributorName: d.distributorName,
+      countryName: country.name,
+      city: d.city,
+      address: d.address || "",
+      phone: d.phone || "",
+      email: d.email || "",
+      website: d.website || "",
+      coordinates: d.coordinates,
+    }))
+  );
 
   const [nearestDistributor, setNearestDistributor] = useState<FlatDistributor | null>(null);
   const [findingLocation, setFindingLocation] = useState(false);
@@ -164,19 +176,23 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
           let closest: FlatDistributor | null = null;
           let closestIsEurope = false;
 
-          const allFlat = distributors.map((d) => ({
-            flat: {
-              distributorName: d.distributorName,
-              countryName: d.country?.name || "",
-              city: d.city,
-              address: d.address || "",
-              phone: d.phone || "",
-              email: d.email || "",
-              website: d.website || "",
-            },
-            coords: d.cityCoordinates,
-            isEurope: d.country?.region === "europe",
-          }));
+          // Flatten all distributors from all countries
+          const allFlat = countries.flatMap((country) =>
+            (country.distributors || []).map((d) => ({
+              flat: {
+                distributorName: d.distributorName,
+                countryName: country.name,
+                city: d.city,
+                address: d.address || "",
+                phone: d.phone || "",
+                email: d.email || "",
+                website: d.website || "",
+                coordinates: d.coordinates,
+              },
+              coords: d.coordinates,
+              isEurope: country.isEurope,
+            }))
+          );
 
           for (const item of allFlat) {
             if (item.coords) {
@@ -246,7 +262,7 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
     : "/img/leaves-vertical.jpg";
 
   return (
-    <section className="h-screen">
+    <section className="relative min-h-screen lg:h-screen">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -255,35 +271,38 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
         priority
       />
       <Container className="relative z-20 h-full">
-        <div className="flex h-full gap-24">
-          <div className="flex flex-1 flex-col gap-4 pt-[12vh] pb-[6vh]">
+        <div className="flex h-full flex-col lg:flex-row lg:gap-24">
+          <div className="flex flex-1 flex-col gap-4 px-4 py-8 pb-24 lg:px-0 lg:pt-[12vh] lg:pb-[6vh]">
             <div>
               <h1 className="h3">{title}</h1>
               <p className="mb-4 font-semibold text-neutral-700">
                 {description}
               </p>
             </div>
-            <div className="relative flex-1 overflow-hidden bg-transparent">
+            <div className="relative h-[50vh] overflow-hidden bg-transparent lg:h-auto lg:flex-1">
               <DistributorMap
                 region={region}
                 activeCountry={activeCountry}
-                highlightedCountries={currentDistributors.map((d) => d.country?.name).filter(Boolean)}
-                distributorCities={currentDistributors
-                  .filter((d) => d.cityCoordinates)
-                  .map((d) => ({
-                    city: d.city,
-                    country: d.country?.name || "",
-                  }))}
+                highlightedCountries={currentCountries.map((c) => c.name)}
+                distributorCities={currentCountries.flatMap((country) =>
+                  (country.distributors || [])
+                    .filter((d) => d.coordinates)
+                    .map((d) => ({
+                      city: d.city,
+                      country: country.name,
+                    }))
+                )}
                 onCountryClick={(country) => setActiveCountry(country)}
                 countryCoordinatesMap={countryCoordinates}
                 cityCoordinatesMap={cityCoordinates}
               />
             </div>
-            <div className="px-12 text-center text-sm text-neutral-500">
+            <div className="hidden px-12 text-center text-sm text-neutral-500 lg:block">
               {bottomNote}
             </div>
           </div>
-          <div className="relative flex basis-[27%] flex-col border-x border-neutral-300 px-4 pt-[12vh] pb-[4vh]">
+          {/* Desktop Sidebar - hidden on mobile */}
+          <div className="relative hidden basis-[27%] flex-col border-x border-neutral-300 px-4 pt-[12vh] pb-[4vh] lg:flex">
             <Image
               alt="fawn image"
               className="object-cover"
@@ -466,6 +485,25 @@ const DistributorsClient = ({ pageData, distributors }: DistributorsClientProps)
             </div>
           </div>
         </div>
+
+        {/* Mobile Bottom Sheet */}
+        <DistributorsMobileSheet
+          region={region}
+          setRegion={setRegion}
+          activeCountry={activeCountry}
+          setActiveCountry={setActiveCountry}
+          groupedDistributors={groupedDistributors}
+          europeTabLabel={europeTabLabel}
+          worldTabLabel={worldTabLabel}
+          europeSidebarHeading={europeSidebarHeading}
+          worldSidebarHeading={worldSidebarHeading}
+          sidebarSubtext={sidebarSubtext}
+          nearestDistributor={nearestDistributor}
+          setNearestDistributor={setNearestDistributor}
+          findingLocation={findingLocation}
+          locationError={locationError}
+          handleFindNearest={handleFindNearest}
+        />
       </Container>
     </section>
   );

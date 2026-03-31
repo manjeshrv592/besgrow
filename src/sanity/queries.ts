@@ -23,7 +23,11 @@ export const contactPageQuery = groq`*[_type == "contactPage"][0]{
   backgroundImage,
   sidebarBackgroundImage,
   title,
-  body
+  leadText,
+  contentText,
+  mainImage,
+  sidebarTitle,
+  sidebarDescription
 }`;
 
 // ─── About Page ───
@@ -31,7 +35,9 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
   backgroundImage,
   sidebarBackgroundImage,
   title,
-  body,
+  leadText,
+  contentText,
+  mainImage,
   sidebarTitle,
   sidebarDescription,
   googleMapsUrl
@@ -107,23 +113,34 @@ export const distributorsPageQuery = groq`*[_type == "distributorsPage"][0]{
   sidebarSubtext
 }`;
 
-// ─── All Distributors (with expanded country) ───
-export const distributorsQuery = groq`*[_type == "distributor"] | order(distributorName asc){
+// ─── All Countries with Distributors ───
+export const countriesWithDistributorsQuery = groq`*[_type == "country" && serviceAvailable == true] | order(name asc){
   _id,
-  distributorName,
-  city,
-  cityCoordinates,
-  address,
-  phone,
-  email,
-  website,
-  country->{
-    _id,
-    name,
-    code,
-    isoNumeric,
-    region,
-    mapCoordinates,
-    mapZoom
+  name,
+  code,
+  isoNumeric,
+  isEurope,
+  serviceAvailable,
+  distributors[]{
+    _key,
+    distributorName,
+    city,
+    coordinates,
+    googleMapsLink,
+    address,
+    phone,
+    email,
+    website
   }
+}`;
+
+// ─── All Countries (for listing) ───
+export const allCountriesQuery = groq`*[_type == "country"] | order(name asc){
+  _id,
+  name,
+  code,
+  isoNumeric,
+  isEurope,
+  serviceAvailable,
+  "distributorCount": count(distributors)
 }`;

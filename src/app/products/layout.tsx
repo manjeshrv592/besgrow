@@ -66,6 +66,7 @@ interface SanityCategory {
 }
 
 import ProductsSidebar from "./ProductsSidebar";
+import ProductsMobileSheet from "./ProductsMobileSheet";
 
 export default async function ProductsLayout({
   children,
@@ -109,12 +110,12 @@ export default async function ProductsLayout({
         priority
       />
       <Container className="relative z-20 h-full">
-        <div className="flex h-full gap-24">
+        <div className="flex h-full flex-col lg:flex-row lg:gap-24">
           {/* Main content area — rendered by page.tsx or [slug]/page.tsx */}
-          <div className="flex flex-1 flex-col gap-8 py-[12vh]">{children}</div>
+          <div className="flex flex-1 flex-col gap-8 px-4 py-8 pb-24 lg:px-0 lg:py-[12vh] lg:pb-[12vh]">{children}</div>
 
-          {/* Shared Sidebar */}
-          <div className="relative flex basis-[27%] flex-col border-x border-neutral-300 px-4 py-[12vh]">
+          {/* Shared Sidebar - hidden on mobile */}
+          <div className="relative hidden basis-[27%] flex-col border-x border-neutral-300 px-4 py-[12vh] lg:flex">
             <Image
               alt="fawn image"
               className="object-cover"
@@ -133,6 +134,9 @@ export default async function ProductsLayout({
             </div>
           </div>
         </div>
+
+        {/* Mobile bottom sheet */}
+        <ProductsMobileSheet productCategories={productCategories} />
       </Container>
     </section>
   );

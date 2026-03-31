@@ -8,7 +8,6 @@ import { LuUser, LuPhone, LuBuilding2, LuMessageSquare } from "react-icons/lu";
 import { sanityFetch } from "@/sanity/live";
 import { contactPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
-import PortableText from "@/components/PortableText";
 
 // Fallback content
 const fallback = {
@@ -17,22 +16,30 @@ const fallback = {
     "We're here to help—share your thoughts or inquiries with us, and we'll get back to you soon!",
   description:
     "Innovation drives everything we do. We continuously invest in research and development, exploring the power of micro-organisms and biostimulants to create smarter, more effective solutions. By anticipating market trends and listening closely to our customers, we deliver products that don't just perform—they elevate growing results.",
+  sidebarTitle: "We'd like to hear from you",
+  sidebarDescription: "Contact Us",
 };
 
 const ContactUsPage = async () => {
   const { data } = await sanityFetch({ query: contactPageQuery });
 
   const title = data?.title || fallback.title;
+  const leadText = data?.leadText || fallback.subtitle;
+  const contentText = data?.contentText || fallback.description;
+  const sidebarTitle = data?.sidebarTitle || fallback.sidebarTitle;
+  const sidebarDescription = data?.sidebarDescription || fallback.sidebarDescription;
   const bgSrc = data?.backgroundImage
     ? urlFor(data.backgroundImage).width(1920).quality(75).url()
     : "/img/beautiful-landscape-with-blue-sky.jpg";
   const sidebarBgSrc = data?.sidebarBackgroundImage
     ? urlFor(data.sidebarBackgroundImage).width(600).quality(75).url()
     : "/img/leaves-vertical.jpg";
-  const hasBody = data?.body && data.body.length > 0;
+  const mainImageSrc = data?.mainImage
+    ? urlFor(data.mainImage).width(800).quality(75).url()
+    : "/img/contact-us.png";
 
   return (
-    <section className="h-screen">
+    <section className="relative pt-10 lg:h-screen lg:pt-0">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -41,42 +48,38 @@ const ContactUsPage = async () => {
         priority
       />
       <Container className="relative z-20 h-full">
-        <div className="flex h-full gap-24">
-          <div className="flex flex-1 flex-col gap-8 py-[12vh]">
+        <div className="flex flex-col lg:h-full lg:flex-row lg:gap-24">
+          <div className="flex flex-col gap-8 px-4 py-8 lg:flex-1 lg:px-0 lg:py-[12vh]">
             <div>
               <h1 className="h3">{title}</h1>
-              {hasBody ? (
-                <PortableText value={data.body} />
-              ) : (
-                <>
-                  <p className="text-besgrow-green mb-4 font-semibold">
-                    {fallback.subtitle}
-                  </p>
-                  <p className="text-besgrow-green">{fallback.description}</p>
-                </>
-              )}
+              <p className=" mb-4 font-semibold">
+                {leadText}
+              </p>
+              <p className="">{contentText}</p>
             </div>
-            <div className="relative flex-1 overflow-hidden">
+            <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-auto lg:flex-1">
               <Image
-                src="/img/contact-us.png"
+                src={mainImageSrc}
                 alt="Contact Us"
                 fill
                 className="object-cover"
               />
             </div>
           </div>
-          <div className="relative flex basis-[27%] flex-col justify-end border border-y-neutral-300 py-[12vh]">
+          <div className="relative flex flex-col justify-end py-8 lg:border lg:border-y-neutral-300 lg:py-[12vh] lg:basis-[27%]">
             <Image
               alt="fawn image"
-              className="object-cover"
+              className="hidden object-cover lg:block"
               src={sidebarBgSrc}
               fill
             />
-            <div className="mb-4 text-center">
+            <div className="relative z-20">
+              <div className="mb-4 text-center">
               <h4 className="font-ronnia text-besgrow-green text-[max(16px,1.2vw)]">
-                We&apos;d like to hear from you
+                {sidebarTitle}
               </h4>
-              <span className="text-besgrow-green">Contact Us</span>
+              <span className="text-besgrow-green">{sidebarDescription}</span>
+            </div>
             </div>
             <div className="px-4">
               <form className="flex flex-col gap-4">

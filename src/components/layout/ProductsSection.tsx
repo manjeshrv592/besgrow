@@ -224,18 +224,18 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
       />
 
       <div className="relative z-20 flex h-full flex-col">
-        <Container className="flex h-full flex-col justify-between py-[12vh]">
+        <Container className="flex min-h-full flex-1 flex-col justify-between py-8 lg:py-[12vh]">
           {/* Header */}
-          <div className="text-right text-white">
+          <div className="text-left text-white lg:text-right">
             <div className="text-xs uppercase">Products</div>
             <div className="font-bold">Explore Our Products</div>
           </div>
 
           {/* Product slider area */}
-          <div className="relative">
+          <div className="relative my-6 lg:my-0">
             {/* Left arrow */}
             <button
-              className="product-prev absolute top-1/2 left-0 z-30 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/25"
+              className="product-prev absolute top-1/2 left-0 z-30 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/25 lg:flex"
               aria-label="Previous product"
             >
               <svg
@@ -255,7 +255,7 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
 
             {/* Right arrow */}
             <button
-              className="product-next absolute top-1/2 right-0 z-30 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/25"
+              className="product-next absolute top-1/2 right-0 z-30 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/25 lg:flex"
               aria-label="Next product"
             >
               <svg
@@ -284,18 +284,18 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
               speed={700}
               onSwiper={setSwiperInstance}
               onSlideChange={handleSlideChange}
-              className="px-[10vw]"
+              className="px-0 lg:px-[10vw]"
             >
               {products.map((product) => (
                 <SwiperSlide key={product.id}>
-                  <div className="flex items-center gap-12 px-[5vw]">
-                    <div className="flex-1 text-right">
+                  <div className="flex flex-col items-start gap-6 px-0 lg:flex-row lg:items-center lg:gap-12 lg:px-[5vw]">
+                    <div className="order-1 flex-1 text-left lg:order-none lg:text-right">
                       <h3 className="h5 text-besgrow-green font-bold">
                         {product.title}
                       </h3>
-                      <p className="text-white">{product.description}</p>
+                      <p className="mt-2 text-sm text-white lg:mt-0 lg:text-base">{product.description}</p>
                     </div>
-                    <div className="relative aspect-square shrink-0 basis-[250px]">
+                    <div className="relative order-2 mx-auto aspect-square w-[200px] shrink-0 lg:order-none lg:mx-0 lg:w-auto lg:basis-[250px]">
                       <Image
                         src={product.image}
                         alt={product.title}
@@ -310,40 +310,42 @@ const ProductsSection = ({ categories }: ProductsSectionProps) => {
           </div>
 
           {/* Static grid with active highlighting */}
-          <div className="grid grid-cols-6 text-right text-white">
-            {gridItems.map((item, index) => (
-              <div
-                key={item.title}
-                className="cursor-pointer"
-                onClick={() => handleGridClick(index)}
-              >
-                <h4
-                  className={`mb-2 font-semibold transition-colors duration-300 ${
-                    activeIndex === index ? "text-besgrow-green" : "text-white"
-                  }`}
+          <div className="-mx-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
+            <div className="flex gap-6 text-left text-white lg:grid lg:grid-cols-6 lg:gap-0 lg:text-right">
+              {gridItems.map((item, index) => (
+                <div
+                  key={item.title}
+                  className="min-w-[140px] shrink-0 cursor-pointer lg:min-w-0 lg:shrink"
+                  onClick={() => handleGridClick(index)}
                 >
-                  {item.title}
-                </h4>
-                {item.items.length > 0 && (
-                  <ul className="text-neutral-400">
-                    {item.items.map((subItem) => (
-                      <li key={subItem.title}>
-                        {subItem.slug ? (
-                          <Link
-                            href={`/products/${subItem.slug}`}
-                            className="transition-colors hover:text-white"
-                          >
-                            {subItem.title}
-                          </Link>
-                        ) : (
-                          subItem.title
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
+                  <h4
+                    className={`mb-1 font-semibold transition-colors duration-300 lg:mb-2 ${
+                      activeIndex === index ? "text-besgrow-green" : "text-white"
+                    }`}
+                  >
+                    {item.title}
+                  </h4>
+                  {item.items.length > 0 && (
+                    <ul className="text-sm text-neutral-400 lg:text-base">
+                      {item.items.map((subItem) => (
+                        <li key={subItem.title}>
+                          {subItem.slug ? (
+                            <Link
+                              href={`/products/${subItem.slug}`}
+                              className="transition-colors hover:text-white text-sm"
+                            >
+                              {subItem.title}
+                            </Link>
+                          ) : (
+                            subItem.title
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </Container>
       </div>

@@ -324,14 +324,16 @@ async function main() {
   const transaction = client.transaction();
 
   for (const c of countries) {
-    const region = europeCountryCodes.has(c.code) ? "europe" : "restOfWorld";
+    const isEurope = europeCountryCodes.has(c.code);
     const doc = {
       _id: `country-${c.code.toLowerCase()}`,
       _type: "country",
       name: c.name,
       code: c.code,
       isoNumeric: c.iso || undefined,
-      region,
+      isEurope,
+      serviceAvailable: false,
+      distributors: [],
     };
     // createIfNotExists prevents duplicates on re-run
     transaction.createIfNotExists(doc);

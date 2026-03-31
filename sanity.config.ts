@@ -12,7 +12,6 @@ import {
   productCategory,
   product,
   country,
-  distributor,
   homePage,
   contactPage,
   aboutPage,
@@ -78,11 +77,8 @@ const structure = (S: StructureBuilder) =>
 
       S.divider(),
 
-      // Collection: Countries
-      S.documentTypeListItem("country").title("Countries"),
-
-      // Collection: Distributors
-      S.documentTypeListItem("distributor").title("Distributors"),
+      // Collection: Countries (with embedded distributors)
+      S.documentTypeListItem("country").title("Countries & Distributors"),
 
       S.divider(),
 
@@ -115,7 +111,6 @@ export default defineConfig({
       productCategory,
       product,
       country,
-      distributor,
       // Singletons
       homePage,
       contactPage,

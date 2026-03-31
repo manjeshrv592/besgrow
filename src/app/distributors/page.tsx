@@ -1,17 +1,17 @@
 import { sanityFetch } from "@/sanity/live";
-import { distributorsPageQuery, distributorsQuery } from "@/sanity/queries";
+import { distributorsPageQuery, countriesWithDistributorsQuery } from "@/sanity/queries";
 import DistributorsClient from "@/components/DistributorsClient";
 
 const DistributorsPage = async () => {
-  const [{ data: pageData }, { data: distributors }] = await Promise.all([
+  const [{ data: pageData }, { data: countries }] = await Promise.all([
     sanityFetch({ query: distributorsPageQuery }),
-    sanityFetch({ query: distributorsQuery }),
+    sanityFetch({ query: countriesWithDistributorsQuery }),
   ]);
 
   return (
     <DistributorsClient
       pageData={pageData}
-      distributors={distributors || []}
+      countries={countries || []}
     />
   );
 };
