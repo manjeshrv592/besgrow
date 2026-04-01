@@ -4,6 +4,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import type { StructureBuilder } from "sanity/structure";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
+import { I18nCharLimitInput } from "@/sanity/components/I18nCharLimitInput";
 
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 import {
@@ -128,6 +129,11 @@ export default defineConfig({
         ({ schemaType }) =>
           !(singletonTypes as readonly string[]).includes(schemaType)
       ),
+  },
+  form: {
+    components: {
+      input: I18nCharLimitInput,
+    },
   },
   plugins: [
     structureTool({

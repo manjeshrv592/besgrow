@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const preFooter = defineType({
   name: "preFooter",
@@ -15,6 +16,7 @@ export const preFooter = defineType({
       name: "text",
       title: "Text",
       type: "internationalizedArrayText",
+      validation: (rule) => rule.custom(i18nCharLimit("preFooter", "text")),
     }),
   ],
   preview: {

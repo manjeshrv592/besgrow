@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const productCategory = defineType({
   name: "productCategory",
@@ -9,6 +10,7 @@ export const productCategory = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(i18nCharLimit("productCategory", "title")),
     }),
     defineField({
       name: "slug",
@@ -32,6 +34,7 @@ export const productCategory = defineType({
       title: "Summary",
       type: "internationalizedArrayText",
       description: "Short description shown in the home page product carousel.",
+      validation: (rule) => rule.custom(i18nCharLimit("productCategory", "summary")),
     }),
     defineField({
       name: "coverImage",

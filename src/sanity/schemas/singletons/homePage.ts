@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const homePage = defineType({
   name: "homePage",
@@ -44,12 +45,14 @@ export const homePage = defineType({
       title: "Hero Title",
       type: "internationalizedArrayString",
       fieldset: "hero",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "heroTitle")),
     }),
     defineField({
       name: "heroDescription",
       title: "Hero Description",
       type: "internationalizedArrayText",
       fieldset: "hero",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "heroDescription")),
     }),
 
     // ── About Section ──
@@ -76,6 +79,7 @@ export const homePage = defineType({
       type: "internationalizedArrayString",
       description: 'e.g., "About Besgrow"',
       fieldset: "about",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "aboutTitle")),
     }),
     defineField({
       name: "aboutBody",
@@ -92,12 +96,14 @@ export const homePage = defineType({
       type: "internationalizedArrayString",
       description: 'e.g., "Find Our Partners Around the World"',
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "partnersTitle")),
     }),
     defineField({
       name: "partnersDescription",
       title: "Description",
       type: "internationalizedArrayText",
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "partnersDescription")),
     }),
     defineField({
       name: "europeHeading",
@@ -105,12 +111,14 @@ export const homePage = defineType({
       type: "internationalizedArrayString",
       description: 'e.g., "Explore Europe at a glance"',
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "europeHeading")),
     }),
     defineField({
       name: "europeDescription",
       title: "Europe Column Description",
       type: "internationalizedArrayText",
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "europeDescription")),
     }),
     defineField({
       name: "worldHeading",
@@ -118,12 +126,14 @@ export const homePage = defineType({
       type: "internationalizedArrayString",
       description: 'e.g., "Beyond Europe, our reach continues"',
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "worldHeading")),
     }),
     defineField({
       name: "worldDescription",
       title: "World Column Description",
       type: "internationalizedArrayText",
       fieldset: "partners",
+      validation: (rule) => rule.custom(i18nCharLimit("homePage", "worldDescription")),
     }),
   ],
   preview: {

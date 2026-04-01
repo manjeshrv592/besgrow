@@ -1,5 +1,7 @@
 import { defineType, defineField } from "sanity";
 import { DistributorEntryInput } from "@/sanity/components/GoogleMapsLinkInput";
+import { getPlainLimit } from "../charLimits";
+import { createPlainCharLimitInput } from "../../components/PlainCharLimitInput";
 
 /**
  * Helper function to extract lat/lng from a Google Maps URL.
@@ -121,13 +123,15 @@ export const country = defineType({
               name: "distributorName",
               title: "Distributor Name",
               type: "string",
-              validation: (rule) => rule.required(),
+              validation: (rule) => rule.required().max(getPlainLimit("country", "distributorName")),
+              components: { input: createPlainCharLimitInput("country", "distributorName") },
             }),
             defineField({
               name: "city",
               title: "City",
               type: "string",
-              validation: (rule) => rule.required(),
+              validation: (rule) => rule.required().max(getPlainLimit("country", "city")),
+              components: { input: createPlainCharLimitInput("country", "city") },
             }),
             defineField({
               name: "googleMapsLink",
@@ -161,16 +165,22 @@ export const country = defineType({
               name: "address",
               title: "Address",
               type: "string",
+              validation: (rule) => rule.max(getPlainLimit("country", "address")),
+              components: { input: createPlainCharLimitInput("country", "address") },
             }),
             defineField({
               name: "phone",
               title: "Phone",
               type: "string",
+              validation: (rule) => rule.max(getPlainLimit("country", "phone")),
+              components: { input: createPlainCharLimitInput("country", "phone") },
             }),
             defineField({
               name: "email",
               title: "Email",
               type: "string",
+              validation: (rule) => rule.max(getPlainLimit("country", "email")),
+              components: { input: createPlainCharLimitInput("country", "email") },
             }),
             defineField({
               name: "website",

@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const contactPage = defineType({
   name: "contactPage",
@@ -22,18 +23,21 @@ export const contactPage = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(i18nCharLimit("contactPage", "title")),
     }),
     defineField({
       name: "leadText",
       title: "Lead Text",
       type: "internationalizedArrayText",
       description: "Short introductory text displayed prominently.",
+      validation: (rule) => rule.custom(i18nCharLimit("contactPage", "leadText")),
     }),
     defineField({
       name: "contentText",
       title: "Content Text",
       type: "internationalizedArrayText",
       description: "Main content text.",
+      validation: (rule) => rule.custom(i18nCharLimit("contactPage", "contentText")),
     }),
     defineField({
       name: "mainImage",
@@ -46,12 +50,14 @@ export const contactPage = defineType({
       title: "Sidebar Title",
       type: "internationalizedArrayString",
       description: "Title displayed in the sidebar panel.",
+      validation: (rule) => rule.custom(i18nCharLimit("contactPage", "sidebarTitle")),
     }),
     defineField({
       name: "sidebarDescription",
       title: "Sidebar Description",
       type: "internationalizedArrayString",
       description: "Description displayed below the sidebar title.",
+      validation: (rule) => rule.custom(i18nCharLimit("contactPage", "sidebarDescription")),
     }),
   ],
   preview: {

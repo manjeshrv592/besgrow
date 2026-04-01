@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const aboutPage = defineType({
   name: "aboutPage",
@@ -21,18 +22,21 @@ export const aboutPage = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(i18nCharLimit("aboutPage", "title")),
     }),
     defineField({
       name: "leadText",
       title: "Lead Text",
       type: "internationalizedArrayText",
       description: "Short introductory text displayed prominently.",
+      validation: (rule) => rule.custom(i18nCharLimit("aboutPage", "leadText")),
     }),
     defineField({
       name: "contentText",
       title: "Content Text",
       type: "internationalizedArrayText",
       description: "Main content text.",
+      validation: (rule) => rule.custom(i18nCharLimit("aboutPage", "contentText")),
     }),
     defineField({
       name: "mainImage",
@@ -45,12 +49,14 @@ export const aboutPage = defineType({
       title: "Sidebar Title",
       type: "internationalizedArrayString",
       description: 'Sidebar heading (e.g., "Our Locations").',
+      validation: (rule) => rule.custom(i18nCharLimit("aboutPage", "sidebarTitle")),
     }),
     defineField({
       name: "sidebarDescription",
       title: "Sidebar Description",
       type: "internationalizedArrayString",
       description: 'Sidebar subtext (e.g., "Find our Offices").',
+      validation: (rule) => rule.custom(i18nCharLimit("aboutPage", "sidebarDescription")),
     }),
     defineField({
       name: "googleMapsUrl",

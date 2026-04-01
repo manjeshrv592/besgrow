@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { i18nCharLimit } from "../charLimits";
 
 export const productsListingPage = defineType({
   name: "productsListingPage",
@@ -16,12 +17,14 @@ export const productsListingPage = defineType({
       title: "Sidebar Title",
       type: "internationalizedArrayString",
       description: 'Sidebar heading (e.g., "Product Catalog").',
+      validation: (rule) => rule.custom(i18nCharLimit("productsListingPage", "sidebarTitle")),
     }),
     defineField({
       name: "sidebarDescription",
       title: "Sidebar Description",
       type: "internationalizedArrayString",
       description: "Sidebar subtext below the title.",
+      validation: (rule) => rule.custom(i18nCharLimit("productsListingPage", "sidebarDescription")),
     }),
   ],
   preview: {

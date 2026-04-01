@@ -1,4 +1,6 @@
 import { defineType, defineField } from "sanity";
+import { getPlainLimit } from "../charLimits";
+import { createPlainCharLimitInput } from "../../components/PlainCharLimitInput";
 
 export const footer = defineType({
   name: "footer",
@@ -10,22 +12,30 @@ export const footer = defineType({
       title: "Address Title",
       type: "string",
       description: 'e.g., "The Netherlands"',
+      validation: (rule) => rule.max(getPlainLimit("footer", "addressTitle")),
+      components: { input: createPlainCharLimitInput("footer", "addressTitle") },
     }),
     defineField({
       name: "address",
       title: "Address",
       type: "text",
       rows: 3,
+      validation: (rule) => rule.max(getPlainLimit("footer", "address")),
+      components: { input: createPlainCharLimitInput("footer", "address") },
     }),
     defineField({
       name: "email",
       title: "Email",
       type: "string",
+      validation: (rule) => rule.max(getPlainLimit("footer", "email")),
+      components: { input: createPlainCharLimitInput("footer", "email") },
     }),
     defineField({
       name: "phone",
       title: "Phone Number",
       type: "string",
+      validation: (rule) => rule.max(getPlainLimit("footer", "phone")),
+      components: { input: createPlainCharLimitInput("footer", "phone") },
     }),
     defineField({
       name: "facebookUrl",
@@ -59,6 +69,8 @@ export const footer = defineType({
       name: "copyrightText",
       title: "Copyright Text",
       type: "string",
+      validation: (rule) => rule.max(getPlainLimit("footer", "copyrightText")),
+      components: { input: createPlainCharLimitInput("footer", "copyrightText") },
     }),
   ],
   preview: {

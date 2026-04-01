@@ -1,4 +1,6 @@
 import { defineType, defineArrayMember } from "sanity";
+import { getPlainLimit } from "../charLimits";
+import { createPlainCharLimitInput } from "../../components/PlainCharLimitInput";
 
 export const brochureButton = defineType({
   name: "brochureButton",
@@ -10,7 +12,8 @@ export const brochureButton = defineType({
       title: "Button Label",
       type: "string",
       initialValue: "Download Brochure",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required().max(getPlainLimit("brochureButton", "label")),
+      components: { input: createPlainCharLimitInput("brochureButton", "label") },
     },
     {
       name: "file",
