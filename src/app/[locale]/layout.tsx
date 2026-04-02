@@ -49,8 +49,8 @@ export default async function LocaleLayout({
   const firstCategory: any = categories?.[0];
   const firstProductSlug = firstCategory?.products?.[0]?.slug?.current;
   const productsHref = firstProductSlug
-    ? `/${locale}/products/${firstProductSlug}`
-    : `/${locale}/products`;
+    ? `/products/${firstProductSlug}`
+    : `/products`;
 
   // Pre-footer values
   const lang = locale as LanguageId;
