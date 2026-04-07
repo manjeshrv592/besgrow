@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import Container from "@/components/layout/Container";
 import Image from "next/image";
 import {
@@ -13,9 +15,16 @@ import DistributorMap from "@/components/DistributorMap";
 import { MapPin, X } from "lucide-react";
 import { urlFor } from "@/sanity/image";
 import DistributorsMobileSheet from "@/components/DistributorsMobileSheet";
+import RegionToggle from "@/components/RegionToggle";
+import type { Region } from "@/components/RegionToggle";
 import type { LanguageId } from "@/sanity/schemas/languages";
 
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) => {
   const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -71,26 +80,42 @@ export type SanityDistributorsPage = {
   sidebarSubtext?: InternationalizedValue[];
 };
 
-function getLocalizedValue(field: InternationalizedValue[] | undefined, locale: LanguageId, fallback: string = ""): string {
+function getLocalizedValue(
+  field: InternationalizedValue[] | undefined,
+  locale: LanguageId,
+  fallback: string = "",
+): string {
   if (!field || !Array.isArray(field)) return fallback;
-  const localized = field.find((item) => item._key === locale || item.language === locale);
+  const localized = field.find(
+    (item) => item._key === locale || item.language === locale,
+  );
   if (localized?.value) return localized.value;
-  const english = field.find((item) => item._key === "en" || item.language === "en");
+  const english = field.find(
+    (item) => item._key === "en" || item.language === "en",
+  );
   return english?.value || fallback;
 }
 
 // Build lookup maps from Sanity country data
 // This ensures all countries with serviceAvailable have their ISO code for map highlighting
 function buildCountryCoordinates(countries: SanityCountryWithDistributors[]) {
-  const coords: Record<string, { iso: string; coordinates: [number, number]; zoom: number }> = {};
+  const coords: Record<
+    string,
+    { iso: string; coordinates: [number, number]; zoom: number }
+  > = {};
   for (const country of countries) {
     if (!coords[country.name] && country.isoNumeric) {
       // Get first distributor's coordinates as country center, or use default
-      const firstDistWithCoords = country.distributors?.find((d) => d.coordinates);
-      const defaultCoords: [number, number] = firstDistWithCoords?.coordinates 
-        ? [firstDistWithCoords.coordinates.lng, firstDistWithCoords.coordinates.lat]
+      const firstDistWithCoords = country.distributors?.find(
+        (d) => d.coordinates,
+      );
+      const defaultCoords: [number, number] = firstDistWithCoords?.coordinates
+        ? [
+            firstDistWithCoords.coordinates.lng,
+            firstDistWithCoords.coordinates.lat,
+          ]
         : [0, 0]; // Fallback - map will still highlight the country
-      
+
       coords[country.name] = {
         iso: country.isoNumeric,
         coordinates: defaultCoords,
@@ -119,32 +144,42 @@ interface DistributorsClientProps {
   locale: LanguageId;
 }
 
-const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientProps) => {
-  const [region, setRegion] = useState<"europe" | "world">("europe");
+const DistributorsClient = ({
+  pageData,
+  countries,
+  locale,
+}: DistributorsClientProps) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Read region from URL search params, default to "europe"
+  const regionParam = searchParams.get("region");
+  const region: Region =
+    regionParam === "rest-of-the-world" ? "rest-of-the-world" : "europe";
+  // Map to internal "europe" | "world" for filtering
+  const isEuropeRegion = region === "europe";
+
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
-  const europeRef = useRef<HTMLButtonElement>(null);
-  const worldRef = useRef<HTMLButtonElement>(null);
-  const [pillStyle, setPillStyle] = useState({ width: 0, left: 0 });
+
+  const setRegion = (newRegion: Region) => {
+    router.push(`${pathname}?region=${newRegion}`);
+  };
 
   // Separate countries by region
   const europeCountries = countries.filter((c) => c.isEurope);
   const restOfWorldCountries = countries.filter((c) => !c.isEurope);
 
-  const currentCountries = region === "europe" ? europeCountries : restOfWorldCountries;
+  const currentCountries = isEuropeRegion
+    ? europeCountries
+    : restOfWorldCountries;
 
   // Build coordinate lookup maps from Sanity data
   const countryCoordinates = buildCountryCoordinates(countries);
   const cityCoordinates = buildCityCoordinates(countries);
 
   useEffect(() => {
-    const activeRef = region === "europe" ? europeRef : worldRef;
-    if (activeRef.current) {
-      setPillStyle({
-        width: activeRef.current.offsetWidth,
-        left: activeRef.current.offsetLeft,
-      });
-    }
-    if (region === "europe") {
+    if (isEuropeRegion) {
       setActiveCountry(europeCountries[0]?.name ?? null);
     } else {
       setActiveCountry(null);
@@ -164,20 +199,22 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
   };
 
   // Flatten distributors from current countries
-  const flatDistributors: FlatDistributor[] = currentCountries.flatMap((country) =>
-    (country.distributors || []).map((d) => ({
-      distributorName: d.distributorName,
-      countryName: country.name,
-      city: d.city,
-      address: d.address || "",
-      phone: d.phone || "",
-      email: d.email || "",
-      website: d.website || "",
-      coordinates: d.coordinates,
-    }))
+  const flatDistributors: FlatDistributor[] = currentCountries.flatMap(
+    (country) =>
+      (country.distributors || []).map((d) => ({
+        distributorName: d.distributorName,
+        countryName: country.name,
+        city: d.city,
+        address: d.address || "",
+        phone: d.phone || "",
+        email: d.email || "",
+        website: d.website || "",
+        coordinates: d.coordinates,
+      })),
   );
 
-  const [nearestDistributor, setNearestDistributor] = useState<FlatDistributor | null>(null);
+  const [nearestDistributor, setNearestDistributor] =
+    useState<FlatDistributor | null>(null);
   const [findingLocation, setFindingLocation] = useState(false);
   const [locationError, setLocationError] = useState("");
 
@@ -207,7 +244,7 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
               },
               coords: d.coordinates,
               isEurope: country.isEurope,
-            }))
+            })),
           );
 
           for (const item of allFlat) {
@@ -216,7 +253,7 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
                 latitude,
                 longitude,
                 item.coords.lat,
-                item.coords.lng
+                item.coords.lng,
               );
               if (distance < minDistance) {
                 minDistance = distance;
@@ -229,14 +266,16 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
           setFindingLocation(false);
           if (closest) {
             setNearestDistributor(closest);
-            setRegion(closestIsEurope ? "europe" : "world");
+            setRegion(closestIsEurope ? "europe" : "rest-of-the-world");
             setActiveCountry(closest.countryName);
           }
         },
         () => {
-          setLocationError("Unable to access location. Please check browser permissions.");
+          setLocationError(
+            "Unable to access location. Please check browser permissions.",
+          );
           setFindingLocation(false);
-        }
+        },
       );
     } else {
       setLocationError("Geolocation is not supported by your browser");
@@ -260,21 +299,37 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
   const description = getLocalizedValue(
     pageData?.description,
     locale,
-    "Our global distributor network brings Besgrow expertise closer to you. From Europe to every corner of the world, our trusted partners ensure local access to our products."
+    "Our global distributor network brings Besgrow expertise closer to you. From Europe to every corner of the world, our trusted partners ensure local access to our products.",
   );
   const bottomNote = getLocalizedValue(
     pageData?.bottomNote,
     locale,
-    "Every distributor profile is kept accurate and up to date, powered directly by our content system, so you always have the latest information at your fingertips."
+    "Every distributor profile is kept accurate and up to date, powered directly by our content system, so you always have the latest information at your fingertips.",
   );
-  const europeTabLabel = getLocalizedValue(pageData?.europeTabLabel, locale, "Europe");
-  const worldTabLabel = getLocalizedValue(pageData?.worldTabLabel, locale, "Rest of the world");
-  const europeSidebarHeading = getLocalizedValue(pageData?.europeSidebarHeading, locale, "European Locations");
-  const worldSidebarHeading = getLocalizedValue(pageData?.worldSidebarHeading, locale, "Around the World Locations");
+  const europeTabLabel = getLocalizedValue(
+    pageData?.europeTabLabel,
+    locale,
+    "Europe",
+  );
+  const worldTabLabel = getLocalizedValue(
+    pageData?.worldTabLabel,
+    locale,
+    "Rest of the world",
+  );
+  const europeSidebarHeading = getLocalizedValue(
+    pageData?.europeSidebarHeading,
+    locale,
+    "European Locations",
+  );
+  const worldSidebarHeading = getLocalizedValue(
+    pageData?.worldSidebarHeading,
+    locale,
+    "Around the World Locations",
+  );
   const sidebarSubtext = getLocalizedValue(
     pageData?.sidebarSubtext,
     locale,
-    "Find our offices and get in touch with our local teams"
+    "Find our offices and get in touch with our local teams",
   );
 
   const bgSrc = pageData?.backgroundImage
@@ -304,7 +359,7 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
             </div>
             <div className="relative h-[50vh] overflow-hidden bg-transparent lg:h-auto lg:flex-1">
               <DistributorMap
-                region={region}
+                region={isEuropeRegion ? "europe" : "world"}
                 activeCountry={activeCountry}
                 highlightedCountries={currentCountries.map((c) => c.name)}
                 distributorCities={currentCountries.flatMap((country) =>
@@ -313,7 +368,7 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
                     .map((d) => ({
                       city: d.city,
                       country: country.name,
-                    }))
+                    })),
                 )}
                 onCountryClick={(country) => setActiveCountry(country)}
                 countryCoordinatesMap={countryCoordinates}
@@ -325,7 +380,7 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
             </div>
           </div>
           {/* Desktop Sidebar - hidden on mobile */}
-          <div className="relative hidden basis-[27%] flex-col border-x border-neutral-300 px-4 pt-[12vh] pb-[4vh] lg:flex">
+          <div className="relative hidden basis-[30%] flex-col border-x border-neutral-300 px-4 pt-[12vh] pb-[4vh] lg:flex">
             <Image
               alt="fawn image"
               className="object-cover"
@@ -335,39 +390,17 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
             <div className="relative z-20 flex h-full flex-col overflow-hidden">
               {/* Toggle Pill */}
               <div className="mb-4 flex shrink-0 justify-center">
-                <div className="border-besgrow-green relative inline-flex rounded-full border-2 bg-white">
-                  {/* Sliding highlighter */}
-                  <span
-                    className="bg-besgrow-green absolute top-0 h-full rounded-full transition-all duration-300 ease-in-out"
-                    style={{ width: pillStyle.width, left: pillStyle.left }}
-                  />
-                  <button
-                    ref={europeRef}
-                    onClick={() => setRegion("europe")}
-                    className={`relative z-10 cursor-pointer rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
-                      region === "europe" ? "text-white" : "text-besgrow-green"
-                    }`}
-                  >
-                    {europeTabLabel}
-                  </button>
-                  <button
-                    ref={worldRef}
-                    onClick={() => setRegion("world")}
-                    className={`relative z-10 cursor-pointer rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
-                      region === "world" ? "text-white" : "text-besgrow-green"
-                    }`}
-                  >
-                    {worldTabLabel}
-                  </button>
-                </div>
+                <RegionToggle
+                  currentRegion={region}
+                  europeLabel={europeTabLabel}
+                  worldLabel={worldTabLabel}
+                />
               </div>
 
               {/* Heading */}
               <div className="mb-4 shrink-0 text-center text-[#184E14]">
                 <h4 className="font-ronnia text-[max(16px,1.2vw)] font-semibold">
-                  {region === "europe"
-                    ? europeSidebarHeading
-                    : worldSidebarHeading}
+                  {isEuropeRegion ? europeSidebarHeading : worldSidebarHeading}
                 </h4>
                 <span className="text-sm text-neutral-600">
                   {sidebarSubtext}
@@ -380,35 +413,57 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
                   <button
                     onClick={handleFindNearest}
                     disabled={findingLocation}
-                    className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-besgrow-green bg-neutral-50 px-4 py-2 text-sm font-semibold text-besgrow-green transition-colors hover:bg-besgrow-green hover:text-white disabled:pointer-events-none disabled:opacity-60"
+                    className="border-besgrow-green text-besgrow-green hover:bg-besgrow-green flex w-full items-center justify-center gap-2 rounded-full border-2 bg-neutral-50 px-4 py-2 text-sm font-semibold transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-60"
                   >
                     <MapPin className="size-4" />
-                    {findingLocation ? "Locating you..." : "Find my nearest office"}
+                    {findingLocation
+                      ? "Locating you..."
+                      : "Find my nearest office"}
                   </button>
                 ) : (
-                  <div className="relative rounded-2xl border border-besgrow-green/20 bg-[#f4f9f2] p-4 shadow-sm">
-                    <button 
-                       onClick={() => setNearestDistributor(null)}
-                       className="absolute right-3 top-3 text-besgrow-green/50 transition-colors hover:text-besgrow-green"
+                  <div className="border-besgrow-green/20 relative rounded-2xl border bg-[#f4f9f2] p-4 shadow-sm">
+                    <button
+                      onClick={() => setNearestDistributor(null)}
+                      className="text-besgrow-green/50 hover:text-besgrow-green absolute top-3 right-3 transition-colors"
                     >
                       <X className="size-4" />
                     </button>
                     <div className="mb-2 flex items-center gap-2">
-                       <MapPin className="size-4 text-besgrow-green" />
-                       <h5 className="flex-1 text-sm font-semibold text-besgrow-green">Nearest to you</h5>
+                      <MapPin className="text-besgrow-green size-4" />
+                      <h5 className="text-besgrow-green flex-1 text-sm font-semibold">
+                        Nearest to you
+                      </h5>
                     </div>
                     <div>
-                      <h6 className="font-semibold text-neutral-800">{nearestDistributor.distributorName}</h6>
-                      <p className="my-0.5 text-sm text-neutral-600">{nearestDistributor.city}, {nearestDistributor.countryName}</p>
-                      <p className="mb-3 text-xs text-neutral-500">{nearestDistributor.address}</p>
+                      <h6 className="font-semibold text-neutral-800">
+                        {nearestDistributor.distributorName}
+                      </h6>
+                      <p className="my-0.5 text-sm text-neutral-600">
+                        {nearestDistributor.city},{" "}
+                        {nearestDistributor.countryName}
+                      </p>
+                      <p className="mb-3 text-xs text-neutral-500">
+                        {nearestDistributor.address}
+                      </p>
                       <div className="flex flex-col gap-1 text-xs">
-                        <a href={`mailto:${nearestDistributor.email}`} className="font-medium text-blue-700 hover:underline">{nearestDistributor.email}</a>
-                        <span className="font-medium text-neutral-700">{nearestDistributor.phone}</span>
+                        <a
+                          href={`mailto:${nearestDistributor.email}`}
+                          className="font-medium text-blue-700 hover:underline"
+                        >
+                          {nearestDistributor.email}
+                        </a>
+                        <span className="font-medium text-neutral-700">
+                          {nearestDistributor.phone}
+                        </span>
                       </div>
                     </div>
                   </div>
                 )}
-                {locationError && <p className="mt-2 text-center text-xs font-medium text-red-500">{locationError}</p>}
+                {locationError && (
+                  <p className="mt-2 text-center text-xs font-medium text-red-500">
+                    {locationError}
+                  </p>
+                )}
               </div>
 
               {/* Accordion */}
@@ -441,10 +496,10 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
                                     : ""
                                 }
                               >
-                                <h5 className="text-besgrow-green mb-2 px-4 text-sm font-semibold">
+                                <h5 className="text-besgrow-green mb-2 px-4 font-semibold">
                                   {dist.distributorName}
                                 </h5>
-                                <table className="w-full text-xs">
+                                <table className="w-full">
                                   <tbody className="text-neutral-700">
                                     <tr>
                                       <td className="py-1 pr-4 pl-4 text-neutral-500">
@@ -486,7 +541,11 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
                                       </td>
                                       <td className="py-1 font-semibold text-blue-700">
                                         <a
-                                          href={dist.website?.startsWith("http") ? dist.website : `https://${dist.website}`}
+                                          href={
+                                            dist.website?.startsWith("http")
+                                              ? dist.website
+                                              : `https://${dist.website}`
+                                          }
                                           target="_blank"
                                           rel="noopener noreferrer"
                                         >
@@ -511,8 +570,10 @@ const DistributorsClient = ({ pageData, countries, locale }: DistributorsClientP
 
         {/* Mobile Bottom Sheet */}
         <DistributorsMobileSheet
-          region={region}
-          setRegion={setRegion}
+          region={isEuropeRegion ? "europe" : "world"}
+          setRegion={(r) =>
+            setRegion(r === "europe" ? "europe" : "rest-of-the-world")
+          }
           activeCountry={activeCountry}
           setActiveCountry={setActiveCountry}
           groupedDistributors={groupedDistributors}

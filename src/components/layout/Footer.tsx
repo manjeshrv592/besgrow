@@ -1,9 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import Container from "@/components/layout/Container";
 import { GoLocation } from "react-icons/go";
 import { LuMail, LuPhone } from "react-icons/lu";
-import { BsInstagram, BsTwitter, BsFacebook, BsLinkedin } from "react-icons/bs";
+import { BsInstagram, BsTwitter, BsLinkedin } from "react-icons/bs";
+import { FaFacebookF } from "react-icons/fa6";
+import { FaLinkedinIn } from "react-icons/fa";
 import { client } from "@/sanity/client";
 import { footerQuery } from "@/sanity/queries";
 
@@ -59,24 +61,29 @@ export default async function Footer() {
               <span className="mt-[2px]">
                 <GoLocation size={20} />
               </span>
-              <address className="max-w-[300px] not-italic">
-                {address}
-              </address>
+              <address className="max-w-[300px] not-italic">{address}</address>
             </div>
           </div>
           <div>
             <div className="mb-2 font-semibold">Contact</div>
             <div className="mb-1 flex items-center gap-2">
               <span>
-                <LuMail strokeWidth={1} size={18} />
+                <LuMail size={18} />
               </span>
-              <a href={`mailto:${email}`}>{email}</a>
+              <a className="font-semibold" href={`mailto:${email}`}>
+                {email}
+              </a>
             </div>
             <div className="mb-4 flex items-center gap-2">
               <span>
-                <LuPhone strokeWidth={1} size={18} />
+                <LuPhone size={18} />
               </span>
-              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{phone}</a>
+              <a
+                className="font-semibold"
+                href={`tel:${phone.replace(/[^+\d]/g, "")}`}
+              >
+                {phone}
+              </a>
             </div>
             <div className="mb-2 text-center font-semibold lg:text-left">
               Social Media
@@ -88,9 +95,9 @@ export default async function Footer() {
                     href={facebookUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
+                    className="flex size-8 items-center justify-center rounded-full bg-[#184E14] text-white transition-all duration-100 ease-in hover:bg-white hover:text-[#184e14]"
                   >
-                    <BsFacebook fill="#4a8844" />
+                    <FaFacebookF fill="currentColor" />
                   </a>
                 </li>
                 <li>
@@ -98,9 +105,9 @@ export default async function Footer() {
                     href={twitterUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
+                    className="flex size-8 items-center justify-center rounded-full bg-[#184E14] text-white transition-all duration-100 ease-in hover:bg-white hover:text-[#184e14]"
                   >
-                    <BsTwitter fill="#4a8844" />
+                    <BsTwitter fill="currentColor" />
                   </a>
                 </li>
                 <li>
@@ -108,9 +115,9 @@ export default async function Footer() {
                     href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
+                    className="flex size-8 items-center justify-center rounded-full bg-[#184E14] text-white transition-all duration-100 ease-in hover:bg-white hover:text-[#184e14]"
                   >
-                    <BsInstagram fill="#4a8844" />
+                    <BsInstagram fill="currentColor" />
                   </a>
                 </li>
                 <li>
@@ -118,9 +125,9 @@ export default async function Footer() {
                     href={linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full bg-neutral-100"
+                    className="flex size-8 items-center justify-center rounded-full bg-[#184E14] text-white transition-all duration-100 ease-in hover:bg-white hover:text-[#184e14]"
                   >
-                    <BsLinkedin fill="#4a8844" />
+                    <FaLinkedinIn fill="currentColor" />
                   </a>
                 </li>
               </ul>
@@ -131,17 +138,17 @@ export default async function Footer() {
           <nav className="mb-4 flex justify-center">
             <ul className="footer-nav flex flex-col items-center gap-4 lg:flex-row">
               <li>
-                <Link className="font-semibold" href="#">
+                <Link className="font-semibold" href="/terms-and-conditions">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link className="font-semibold" href="#">
+                <Link className="font-semibold" href="/privacy">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link className="font-semibold" href="#">
+                <Link className="font-semibold" href="/cookie-settings">
                   Cookie Settings
                 </Link>
               </li>

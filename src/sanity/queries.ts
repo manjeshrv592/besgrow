@@ -144,3 +144,19 @@ export const allCountriesQuery = groq`*[_type == "country"] | order(name asc){
   serviceAvailable,
   "distributorCount": count(distributors)
 }`;
+
+// ─── Legal Pages ───
+export const privacyPageQuery = groq`*[_type == "privacyPage"][0]{
+  title,
+  content
+}`;
+
+export const cookiePageQuery = groq`*[_type == "cookiePage"][0]{
+  title,
+  content
+}`;
+
+export const termsPageQuery = groq`*[_type == "termsPage"][0]{
+  title,
+  content
+}`;

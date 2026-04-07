@@ -2,6 +2,7 @@ import { Figtree, Nokora } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,8 +30,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={cn("font-sans", figtree.variable, nokora.variable, ronnia.variable)}>
-      <body className="text-neutral-700 antialiased">{children}</body>
+    <html
+      className={cn(
+        "font-sans",
+        figtree.variable,
+        nokora.variable,
+        ronnia.variable,
+      )}
+    >
+      <body className="text-justify text-neutral-700 antialiased">
+        {children}
+        <Toaster theme="light" position="top-right" richColors closeButton />
+      </body>
     </html>
   );
 }

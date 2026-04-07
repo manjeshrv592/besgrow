@@ -69,7 +69,7 @@ const IconButton = ({
       {/* Icon circle */}
       <span
         ref={iconRef}
-        className="bg-besgrow-green top-0 left-0 z-10 flex aspect-square -translate-x-px -translate-y-px items-center justify-center rounded-full lg:absolute lg:h-[calc(100%+2px)]"
+        className="bg-besgrow-green top-0 left-0 z-10 flex aspect-square -translate-x-px -translate-y-px items-center justify-center rounded-full lg:absolute lg:h-[calc(100%+2px)] [&_svg]:h-[max(16px,1.3vw)] [&_svg]:w-[max(16px,1.3vw)]"
       >
         {icon}
       </span>

@@ -248,7 +248,7 @@ const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
         <Container className="flex min-h-full flex-1 flex-col justify-between py-8 lg:py-[12vh]">
           {/* Header */}
           <div className="text-left text-white lg:text-right">
-            <div className="text-xs uppercase">Products</div>
+            <div className="uppercase">Products</div>
             <div className="font-bold">Explore Our Products</div>
           </div>
 
@@ -314,7 +314,7 @@ const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
                       <h3 className="h5 text-besgrow-green font-bold">
                         {product.title}
                       </h3>
-                      <p className="mt-2 text-sm text-white lg:mt-0 lg:text-base">
+                      <p className="mt-2 text-white lg:mt-0">
                         {product.description}
                       </p>
                     </div>
@@ -351,13 +351,13 @@ const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
                     {item.title}
                   </h4>
                   {item.items.length > 0 && (
-                    <ul className="text-sm text-neutral-400 lg:text-base">
+                    <ul className="text-neutral-400">
                       {item.items.map((subItem) => (
                         <li key={subItem.title}>
                           {subItem.slug ? (
                             <Link
                               href={`/products/${subItem.slug}`}
-                              className="text-sm transition-colors hover:text-white"
+                              className="transition-colors hover:text-white"
                             >
                               {subItem.title}
                             </Link>

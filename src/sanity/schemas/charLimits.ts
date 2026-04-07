@@ -236,6 +236,19 @@ export const charLimits: Record<string, Record<string, LanguageLimits>> = {
   },
 
   // ──────────────────────────────────────────────
+  // Legal Pages
+  // ──────────────────────────────────────────────
+  privacyPage: {
+    title: { en: 100, nl: 100, fr: 100, de: 100, pl: 100, es: 100 },
+  },
+  cookiePage: {
+    title: { en: 100, nl: 100, fr: 100, de: 100, pl: 100, es: 100 },
+  },
+  termsPage: {
+    title: { en: 100, nl: 100, fr: 100, de: 100, pl: 100, es: 100 },
+  },
+
+  // ──────────────────────────────────────────────
   // Product
   // ──────────────────────────────────────────────
   product: {

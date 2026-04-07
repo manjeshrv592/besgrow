@@ -23,6 +23,7 @@
   --color-besgrow-green-light: #99d536;
   /* --color-besgrow-green: #99d536; */
   --color-besgrow-green: #59c134;
+  --color-besgrow-green-dark: #386a33;
 
   --font-nokora: "Nokora", sans-serif;
   --font-ronnia: "Ronnia", sans-serif;
@@ -101,6 +102,22 @@
 body {
   font-family: var(--font-nokora);
   font-size: var(--font-size-body);
+}
+
+html {
+  /* optional fallback */
+  scrollbar-gutter: stable;
+}
+
+/* Force Radix UI and react-remove-scroll to stop locking body scroll */
+html body,
+html body[data-scroll-locked],
+html body[style] {
+  overflow: visible !important;
+  overflow-y: scroll !important;
+  padding-right: 0px !important;
+  margin-right: 0px !important;
+  pointer-events: auto !important;
 }
 
 /* ── Footer Nav Dividers ── */
@@ -206,20 +223,26 @@ body {
   }
 }
 
-/* Custom Scrollbar Styles */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+/* Global Custom Scrollbar Styles */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-besgrow-green) transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: var(--color-besgrow-green);
   border-radius: 20px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background-color: #386a33; /* Darker shade of brand green for hover */
 }

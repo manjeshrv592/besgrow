@@ -21,6 +21,9 @@ import {
   distributorsPage,
   preFooter,
   footer,
+  privacyPage,
+  cookiePage,
+  termsPage,
   singletonTypes,
 } from "@/sanity/schemas";
 import { languages } from "@/sanity/schemas/languages";
@@ -72,6 +75,26 @@ const structure = (S: StructureBuilder) =>
 
       S.divider(),
 
+      // Singleton: Privacy Page
+      S.listItem()
+        .title("Privacy Page")
+        .id("privacyPage")
+        .child(S.document().schemaType("privacyPage").documentId("privacyPage")),
+
+      // Singleton: Cookie Page
+      S.listItem()
+        .title("Cookie Page")
+        .id("cookiePage")
+        .child(S.document().schemaType("cookiePage").documentId("cookiePage")),
+
+      // Singleton: Terms & Conditions Page
+      S.listItem()
+        .title("Terms & Conditions Page")
+        .id("termsPage")
+        .child(S.document().schemaType("termsPage").documentId("termsPage")),
+
+          S.divider(),
+
       // Collection: Product Categories
       S.documentTypeListItem("productCategory").title("Product Categories"),
 
@@ -98,6 +121,8 @@ const structure = (S: StructureBuilder) =>
         .title("Footer")
         .id("footer")
         .child(S.document().schemaType("footer").documentId("footer")),
+
+     
     ]);
 
 export default defineConfig({
@@ -122,6 +147,9 @@ export default defineConfig({
       distributorsPage,
       preFooter,
       footer,
+      privacyPage,
+      cookiePage,
+      termsPage,
     ],
     // Prevent singletons from being created/deleted through the "new document" menu
     templates: (templates) =>
@@ -152,6 +180,9 @@ export default defineConfig({
           "distributorsPage",
           "preFooter",
           "footer",
+          "privacyPage",
+          "cookiePage",
+          "termsPage",
           "product",
           "productCategory",
         ],

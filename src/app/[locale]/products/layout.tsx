@@ -94,8 +94,16 @@ export default async function ProductsLayout({
     sanityFetch({ query: productCategoriesQuery }),
   ]);
 
-  const sidebarTitle = getLocalizedString(pageData?.sidebarTitle, lang, fallbackSidebar.sidebarTitle);
-  const sidebarDescription = getLocalizedString(pageData?.sidebarDescription, lang, fallbackSidebar.sidebarDescription);
+  const sidebarTitle = getLocalizedString(
+    pageData?.sidebarTitle,
+    lang,
+    fallbackSidebar.sidebarTitle,
+  );
+  const sidebarDescription = getLocalizedString(
+    pageData?.sidebarDescription,
+    lang,
+    fallbackSidebar.sidebarDescription,
+  );
   const sidebarBgSrc = pageData?.sidebarBackgroundImage
     ? urlFor(pageData.sidebarBackgroundImage).width(600).quality(75).url()
     : "/img/products-bg.jpg";
@@ -116,7 +124,7 @@ export default async function ProductsLayout({
       }));
 
   return (
-    <section className="relative">
+    <section className="relative pt-10 lg:h-screen lg:pt-0">
       <Image
         src="/img/inner-page-compo.jpg"
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -127,10 +135,12 @@ export default async function ProductsLayout({
       <Container className="relative z-20 h-full">
         <div className="flex h-full flex-col lg:flex-row lg:gap-24">
           {/* Main content area — rendered by page.tsx or [slug]/page.tsx */}
-          <div className="flex flex-1 flex-col gap-8 px-4 py-8 pb-24 lg:px-0 lg:py-[12vh] lg:pb-[12vh]">{children}</div>
+          <div className="flex flex-1 flex-col gap-8 px-4 py-8 pb-24 lg:px-0 lg:py-[12vh] lg:pb-[12vh]">
+            {children}
+          </div>
 
           {/* Shared Sidebar - hidden on mobile */}
-          <div className="relative hidden basis-[27%] flex-col border-x border-neutral-300 px-4 py-[12vh] lg:flex">
+          <div className="relative hidden basis-[30%] flex-col border-x border-neutral-300 px-4 py-[12vh] lg:flex">
             <Image
               alt="fawn image"
               className="object-cover"

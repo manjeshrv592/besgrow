@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { sanityFetch } from "@/sanity/live";
 import { distributorsPageQuery, countriesWithDistributorsQuery } from "@/sanity/queries";
 import DistributorsClient from "@/components/DistributorsClient";
@@ -19,11 +20,13 @@ const DistributorsPage = async ({ params }: DistributorsPageProps) => {
   ]);
 
   return (
-    <DistributorsClient
-      pageData={pageData}
-      countries={countries || []}
-      locale={lang}
-    />
+    <Suspense>
+      <DistributorsClient
+        pageData={pageData}
+        countries={countries || []}
+        locale={lang}
+      />
+    </Suspense>
   );
 };
 

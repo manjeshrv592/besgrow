@@ -41,10 +41,27 @@ const LanguageSwitcher = ({ currentLocale }: { currentLocale: Locale }) => {
   return (
     <span>
       <Select value={currentLocale} onValueChange={handleLanguageChange}>
-        <SelectTrigger className="w-full">
-          <SelectValue />
+        <SelectTrigger className="w-[84px] gap-2">
+          {(() => {
+            const currentLang =
+              languages.find((l) => l.value === currentLocale) || languages[0];
+            return (
+              <div className="flex items-center gap-1.5">
+                <Image
+                  className="size-5 rounded-full object-cover"
+                  src={currentLang.flag}
+                  alt={currentLang.label}
+                  width={20}
+                  height={20}
+                />
+                <span className="translate-y-px uppercase">
+                  {currentLang.value}
+                </span>
+              </div>
+            );
+          })()}
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent position="popper" align="end" sideOffset={6}>
           <SelectGroup>
             {languages.map((lang) => (
               <SelectItem key={lang.value} value={lang.value}>
@@ -55,7 +72,7 @@ const LanguageSwitcher = ({ currentLocale }: { currentLocale: Locale }) => {
                   width={20}
                   height={20}
                 />
-                <span className="uppercase">{lang.value}</span>
+                <span className="capitalize">{lang.label}</span>
               </SelectItem>
             ))}
           </SelectGroup>
@@ -72,7 +89,8 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
   const pathname = usePathname() || "";
 
   useEffect(() => {
-    let previousScrollPosition = typeof window !== "undefined" ? window.scrollY : 0;
+    let previousScrollPosition =
+      typeof window !== "undefined" ? window.scrollY : 0;
 
     const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
@@ -83,10 +101,13 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
         setIsScrolled(false);
       }
 
-      if (currentScrollPosition > previousScrollPosition && currentScrollPosition > 100) {
+      if (
+        currentScrollPosition > previousScrollPosition &&
+        currentScrollPosition > 100
+      ) {
         setIsVisible(false); // Hide on scroll down
       } else if (previousScrollPosition > currentScrollPosition) {
-        setIsVisible(true);  // Show on scroll up
+        setIsVisible(true); // Show on scroll up
       }
 
       previousScrollPosition = currentScrollPosition;
@@ -111,7 +132,7 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
       <header
         className={`fixed top-0 left-0 z-50 flex w-full items-center justify-between px-4 transition-all duration-300 ease-in-out lg:grid lg:grid-cols-[1fr_max-content_1fr] ${
           isVisible || mobileNavOpen ? "translate-y-0" : "-translate-y-full"
-        } ${isScrolled ? "bg-white/95 shadow-sm backdrop-blur-md" : "bg-transparent"}`}
+        } bg-transparent`}
       >
         <Link href="/">
           <Image
@@ -146,7 +167,7 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
         </div>
         {/* Nav - slides in from top */}
         <nav
-          className={`fixed top-0 left-1/2 z-50 mx-auto w-full -translate-x-1/2 rounded-b-3xl bg-white px-8 py-4 font-semibold text-neutral-700 transition-transform duration-300 ease-in-out lg:relative lg:top-auto lg:left-auto lg:block lg:w-auto lg:translate-y-0 lg:translate-none lg:rounded-full lg:border lg:border-neutral-200 lg:bg-white/60 lg:py-2 ${
+          className={`fixed top-0 left-1/2 z-50 mx-auto w-full -translate-x-1/2 rounded-b-3xl bg-white px-8 py-4 font-semibold text-neutral-700 transition-transform duration-300 ease-in-out lg:relative lg:top-auto lg:left-auto lg:block lg:w-auto lg:translate-y-0 lg:translate-none lg:rounded-full lg:border lg:border-neutral-200 lg:bg-white lg:py-2 ${
             mobileNavOpen
               ? "translate-y-0"
               : "-translate-y-full lg:translate-y-0"
@@ -154,22 +175,38 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
         >
           <ul className="flex justify-center gap-6 lg:gap-[3vw]">
             <li>
-              <Link href="/" className={linkClass("/")} onClick={() => setMobileNavOpen(false)}>
+              <Link
+                href="/"
+                className={linkClass("/")}
+                onClick={() => setMobileNavOpen(false)}
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link href={productsHref} className={linkClass("/products")} onClick={() => setMobileNavOpen(false)}>
+              <Link
+                href={productsHref}
+                className={linkClass("/products")}
+                onClick={() => setMobileNavOpen(false)}
+              >
                 Products
               </Link>
             </li>
             <li>
-              <Link href="/distributors" className={linkClass("/distributors")} onClick={() => setMobileNavOpen(false)}>
+              <Link
+                href="/distributors?region=europe"
+                className={linkClass("/distributors")}
+                onClick={() => setMobileNavOpen(false)}
+              >
                 Distributors
               </Link>
             </li>
             <li>
-              <Link href="/about-us" className={linkClass("/about-us")} onClick={() => setMobileNavOpen(false)}>
+              <Link
+                href="/about-us"
+                className={linkClass("/about-us")}
+                onClick={() => setMobileNavOpen(false)}
+              >
                 About Us
               </Link>
             </li>

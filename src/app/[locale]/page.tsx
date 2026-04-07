@@ -14,6 +14,8 @@ import {
 } from "@/sanity/utils";
 import type { LanguageId } from "@/sanity/schemas/languages";
 import { setRequestLocale } from "next-intl/server";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 // Fallback data
 const fallback = {
@@ -216,9 +218,25 @@ const HomePage = async ({ params }: HomePageProps) => {
             </div>
           </Container>
           <Container className="py-[15vw] lg:py-[3vw]">
-            <div className="mb-[5vw] lg:text-center">
+            <div className="lg:text-center">
               <h2 className="h4 mb-[1vw]">{partnersTitle}</h2>
               <p className="mx-auto lg:max-w-[50vw]">{partnersDescription}</p>
+            </div>
+            <div className="my-[2.5vw] flex flex-wrap items-center justify-center gap-4">
+              <Button
+                asChild
+                className="bg-besgrow-green h-auto rounded-full px-8 py-4 text-base font-semibold text-white transition-colors duration-300 hover:bg-[#479a2a]"
+              >
+                <Link href="/distributors?region=europe">Europe</Link>
+              </Button>
+              <Button
+                asChild
+                className="bg-besgrow-green h-auto rounded-full px-8 py-4 text-base font-semibold text-white transition-colors duration-300 hover:bg-[#479a2a]"
+              >
+                <Link href="/distributors?region=rest-of-the-world">
+                  Rest of the world
+                </Link>
+              </Button>
             </div>
             <div className="lg:grid lg:grid-cols-2 lg:gap-[6vw] lg:px-[10vw]">
               <div className="lg:text-center">

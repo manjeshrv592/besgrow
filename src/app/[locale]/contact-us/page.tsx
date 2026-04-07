@@ -1,10 +1,6 @@
 import Container from "@/components/layout/Container";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import IconButton from "@/components/ui/IconButton";
-import { CiMail } from "react-icons/ci";
-import { LuUser, LuPhone, LuBuilding2, LuMessageSquare } from "react-icons/lu";
+import ContactForm from "./ContactForm";
 import { sanityFetch } from "@/sanity/live";
 import { contactPageQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
@@ -36,9 +32,21 @@ const ContactUsPage = async ({ params }: ContactUsPageProps) => {
 
   const title = getLocalizedString(data?.title, lang, fallback.title);
   const leadText = getLocalizedText(data?.leadText, lang, fallback.subtitle);
-  const contentText = getLocalizedText(data?.contentText, lang, fallback.description);
-  const sidebarTitle = getLocalizedString(data?.sidebarTitle, lang, fallback.sidebarTitle);
-  const sidebarDescription = getLocalizedString(data?.sidebarDescription, lang, fallback.sidebarDescription);
+  const contentText = getLocalizedText(
+    data?.contentText,
+    lang,
+    fallback.description,
+  );
+  const sidebarTitle = getLocalizedString(
+    data?.sidebarTitle,
+    lang,
+    fallback.sidebarTitle,
+  );
+  const sidebarDescription = getLocalizedString(
+    data?.sidebarDescription,
+    lang,
+    fallback.sidebarDescription,
+  );
   const bgSrc = data?.backgroundImage
     ? urlFor(data.backgroundImage).width(1920).quality(75).url()
     : "/img/beautiful-landscape-with-blue-sky.jpg";
@@ -63,12 +71,10 @@ const ContactUsPage = async ({ params }: ContactUsPageProps) => {
           <div className="flex flex-col gap-8 px-4 py-8 lg:flex-1 lg:px-0 lg:py-[12vh]">
             <div>
               <h1 className="h3">{title}</h1>
-              <p className=" mb-4 font-semibold">
-                {leadText}
-              </p>
+              <p className="mb-4 font-semibold">{leadText}</p>
               <p className="">{contentText}</p>
             </div>
-            <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-auto lg:flex-1">
+            <div className="relative aspect-4/3 w-full overflow-hidden lg:aspect-auto lg:flex-1">
               <Image
                 src={mainImageSrc}
                 alt="Contact Us"
@@ -77,7 +83,7 @@ const ContactUsPage = async ({ params }: ContactUsPageProps) => {
               />
             </div>
           </div>
-          <div className="relative flex flex-col justify-end py-8 lg:border lg:border-y-neutral-300 lg:py-[12vh] lg:basis-[27%]">
+          <div className="relative flex flex-col py-8 lg:basis-[30%] lg:border lg:border-y-neutral-300 lg:py-[12vh]">
             <Image
               alt="fawn image"
               className="hidden object-cover lg:block"
@@ -85,77 +91,15 @@ const ContactUsPage = async ({ params }: ContactUsPageProps) => {
               fill
             />
             <div className="relative z-20">
-              <div className="mb-4 text-center">
-              <h4 className="font-ronnia text-besgrow-green text-[max(16px,1.2vw)]">
-                {sidebarTitle}
-              </h4>
-              <span className="text-besgrow-green">{sidebarDescription}</span>
+              <div className="mb-4 text-center text-[#184E14]">
+                <h4 className="font-ronnia text-[max(16px,1.2vw)]">
+                  {sidebarTitle}
+                </h4>
+                <span className="">{sidebarDescription}</span>
+              </div>
             </div>
-            </div>
-            <div className="px-4">
-              <form className="flex flex-col gap-4">
-                <div className="relative">
-                  <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-                    <LuUser size={18} strokeWidth={1.5} />
-                  </span>
-                  <Input
-                    placeholder="Name"
-                    className="h-10 rounded-md border-neutral-500 bg-white pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-                    <CiMail size={20} strokeWidth={0.5} />
-                  </span>
-                  <Input
-                    type="email"
-                    placeholder="Email ID"
-                    className="h-10 rounded-md border-neutral-500 bg-white pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-                    <LuPhone size={18} strokeWidth={1.5} />
-                  </span>
-                  <Input
-                    type="tel"
-                    placeholder="Phone Number"
-                    className="h-10 rounded-md border-neutral-500 bg-white pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-                    <LuBuilding2 size={18} strokeWidth={1.5} />
-                  </span>
-                  <Input
-                    placeholder="Company Name"
-                    className="h-10 rounded-md border-neutral-500 bg-white pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <span className="text-muted-foreground absolute top-3 left-3">
-                    <LuMessageSquare size={18} strokeWidth={1.5} />
-                  </span>
-                  <Textarea
-                    placeholder="Message"
-                    className="min-h-32 rounded-md border-neutral-500 bg-white pl-10"
-                  />
-                </div>
-                <div className="flex justify-center pt-2">
-                  <IconButton
-                    className="text-center"
-                    type="submit"
-                    icon={
-                      <CiMail
-                        className="translate-y-0.5 text-white"
-                        strokeWidth={1}
-                      />
-                    }
-                  >
-                    Send
-                  </IconButton>
-                </div>
-              </form>
+            <div className="relative z-20 px-4">
+              <ContactForm />
             </div>
           </div>
         </div>
