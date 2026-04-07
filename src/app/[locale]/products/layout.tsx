@@ -124,7 +124,7 @@ export default async function ProductsLayout({
       }));
 
   return (
-    <section className="relative pt-10 lg:h-screen lg:pt-0">
+    <section className="relative pt-10 lg:pt-0">
       <Image
         src="/img/inner-page-compo.jpg"
         alt="Beautiful landscape with blue sky with leaves illustration"
