@@ -29,7 +29,7 @@ export default async function CookiePage({ params }: CookiePageProps) {
       <Container>
         <div className="mx-auto max-w-4xl">
           <h1 className="h2 mb-8">{title}</h1>
-          <div className="prose prose-lg prose-green max-w-none">
+          <div className="prose prose-lg max-w-none">
             {content.length > 0 ? (
               <PortableText value={content} />
             ) : (
