@@ -138,22 +138,22 @@ export default async function Footer() {
           <nav className="mb-4 flex justify-center">
             <ul className="footer-nav flex flex-col items-center gap-4 lg:flex-row">
               <li>
-                <Link className="font-semibold" href="/terms-and-conditions">
+                <Link className="relative font-semibold pb-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full" href="/terms-and-conditions">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link className="font-semibold" href="/delivery-terms">
+                <Link className="relative font-semibold pb-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full" href="/delivery-terms">
                   Terms of Delivery
                 </Link>
               </li>
               <li>
-                <Link className="font-semibold" href="/privacy">
+                <Link className="relative font-semibold pb-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full" href="/privacy">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link className="font-semibold" href="/cookie-settings">
+                <Link className="relative font-semibold pb-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full" href="/cookie-settings">
                   Cookie Settings
                 </Link>
               </li>
