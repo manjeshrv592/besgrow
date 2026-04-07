@@ -24,6 +24,7 @@ import {
   privacyPage,
   cookiePage,
   termsPage,
+  deliveryTermsPage,
   singletonTypes,
 } from "@/sanity/schemas";
 import { languages } from "@/sanity/schemas/languages";
@@ -93,6 +94,12 @@ const structure = (S: StructureBuilder) =>
         .id("termsPage")
         .child(S.document().schemaType("termsPage").documentId("termsPage")),
 
+      // Singleton: Terms of Delivery Page
+      S.listItem()
+        .title("Terms of Delivery Page")
+        .id("deliveryTermsPage")
+        .child(S.document().schemaType("deliveryTermsPage").documentId("deliveryTermsPage")),
+
           S.divider(),
 
       // Collection: Product Categories
@@ -150,6 +157,7 @@ export default defineConfig({
       privacyPage,
       cookiePage,
       termsPage,
+      deliveryTermsPage,
     ],
     // Prevent singletons from being created/deleted through the "new document" menu
     templates: (templates) =>
@@ -183,6 +191,7 @@ export default defineConfig({
           "privacyPage",
           "cookiePage",
           "termsPage",
+          "deliveryTermsPage",
           "product",
           "productCategory",
         ],

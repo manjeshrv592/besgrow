@@ -161,6 +161,7 @@ const DistributorsClient = ({
   const isEuropeRegion = region === "europe";
 
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
   const setRegion = (newRegion: Region) => {
     router.push(`${pathname}?region=${newRegion}`);
@@ -370,7 +371,11 @@ const DistributorsClient = ({
                       country: country.name,
                     })),
                 )}
-                onCountryClick={(country) => setActiveCountry(country)}
+                onCountryClick={(country) => {
+                  setActiveCountry(country);
+                  // Auto-open mobile sheet when a country is clicked on the map
+                  setMobileSheetOpen(true);
+                }}
                 countryCoordinatesMap={countryCoordinates}
                 cityCoordinatesMap={cityCoordinates}
               />
@@ -587,6 +592,8 @@ const DistributorsClient = ({
           findingLocation={findingLocation}
           locationError={locationError}
           handleFindNearest={handleFindNearest}
+          isOpen={mobileSheetOpen}
+          setIsOpen={setMobileSheetOpen}
         />
       </Container>
     </section>

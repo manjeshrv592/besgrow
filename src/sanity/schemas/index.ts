@@ -20,6 +20,7 @@ export { footer } from "./singletons/footer";
 export { privacyPage } from "./singletons/privacyPage";
 export { cookiePage } from "./singletons/cookiePage";
 export { termsPage } from "./singletons/termsPage";
+export { deliveryTermsPage } from "./singletons/deliveryTermsPage";
 
 // All singleton type names (used for structure configuration)
 export const singletonTypes = [
@@ -33,4 +34,5 @@ export const singletonTypes = [
   "privacyPage",
   "cookiePage",
   "termsPage",
+  "deliveryTermsPage",
 ] as const;

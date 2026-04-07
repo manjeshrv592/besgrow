@@ -160,3 +160,8 @@ export const termsPageQuery = groq`*[_type == "termsPage"][0]{
   title,
   content
 }`;
+
+export const deliveryTermsPageQuery = groq`*[_type == "deliveryTermsPage"][0]{
+  title,
+  content
+}`;

@@ -317,7 +317,10 @@ interface DistributorMapProps {
   highlightedCountries: string[];
   distributorCities?: { city: string; country: string }[];
   onCountryClick?: (country: string) => void;
-  countryCoordinatesMap?: Record<string, { iso: string; coordinates: [number, number]; zoom: number }>;
+  countryCoordinatesMap?: Record<
+    string,
+    { iso: string; coordinates: [number, number]; zoom: number }
+  >;
   cityCoordinatesMap?: Record<string, [number, number]>;
 }
 
@@ -346,6 +349,10 @@ const DistributorMap = ({
     alpha2: string;
   } | null>(null);
 
+  // Mobile overlay: prevent accidental map interaction while scrolling
+  const [isMapActive, setIsMapActive] = useState(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
   useEffect(() => {
     // Programmatic zoom — enable animation
     setShouldAnimate(true);
@@ -366,7 +373,7 @@ const DistributorMap = ({
     return () => {
       if (animationTimeout.current) clearTimeout(animationTimeout.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCountry, region, resolvedCountryCoords]);
 
   // Build ISO → country name lookup for click handling
@@ -421,9 +428,36 @@ const DistributorMap = ({
   return (
     <div
       ref={containerRef}
-      className="h-full w-full"
-      style={{ touchAction: "none" }}
+      className="relative h-full w-full"
+      style={{ touchAction: isMapActive ? "none" : undefined }}
     >
+      {/* Mobile overlay to prevent accidental map panning while scrolling */}
+      {!isMapActive && (
+        <div
+          className="absolute inset-0 z-10 flex items-center justify-center md:hidden"
+          onTouchStart={(e) => {
+            const touch = e.touches[0];
+            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+          }}
+          onTouchEnd={(e) => {
+            if (!touchStartRef.current) return;
+            const touch = e.changedTouches[0];
+            const dx = touch.clientX - touchStartRef.current.x;
+            const dy = touch.clientY - touchStartRef.current.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            touchStartRef.current = null;
+            // Only activate on a genuine tap (finger moved < 10px)
+            if (distance < 10) {
+              e.preventDefault();
+              setIsMapActive(true);
+            }
+          }}
+        >
+          <span className="rounded-full bg-black/60 px-4 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-sm">
+            Tap to interact with the map
+          </span>
+        </div>
+      )}
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
@@ -434,6 +468,8 @@ const DistributorMap = ({
         <ZoomableGroup
           center={mapCenter.coordinates}
           zoom={mapCenter.zoom}
+          minZoom={1}
+          maxZoom={50}
           onMoveEnd={handleMoveEnd}
           style={
             shouldAnimate
@@ -511,7 +547,10 @@ const DistributorMap = ({
 
             return (
               <Marker key={`city-${loc.city}-${idx}`} coordinates={coords}>
-                <g style={{ pointerEvents: "none" }} transform={`scale(${1 / mapCenter.zoom})`}>
+                <g
+                  style={{ pointerEvents: "none" }}
+                  transform={`scale(${1 / mapCenter.zoom})`}
+                >
                   <path
                     d="M0,0 C0,0 12,-15 12,-24 A12,12 0 1,0 -12,-24 C-12,-15 0,0 0,0 Z"
                     fill="#6a7b8c"

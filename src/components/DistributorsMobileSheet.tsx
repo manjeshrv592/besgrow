@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -36,6 +36,8 @@ interface DistributorsMobileSheetProps {
   findingLocation: boolean;
   locationError: string;
   handleFindNearest: () => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 export default function DistributorsMobileSheet({
@@ -54,12 +56,30 @@ export default function DistributorsMobileSheet({
   findingLocation,
   locationError,
   handleFindNearest,
+  isOpen,
+  setIsOpen,
 }: DistributorsMobileSheetProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleCountryClick = (country: string) => {
     setActiveCountry(country === activeCountry ? null : country);
   };
+
+  // Auto-scroll to the active accordion item when the sheet opens or activeCountry changes
+  useEffect(() => {
+    if (isOpen && activeCountry && scrollContainerRef.current) {
+      // Small delay to allow the accordion to expand and sheet to animate
+      const timer = setTimeout(() => {
+        const accordionItem = scrollContainerRef.current?.querySelector(
+          `[data-country="${CSS.escape(activeCountry)}"]`
+        );
+        if (accordionItem) {
+          accordionItem.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, activeCountry]);
 
   return (
     <>
@@ -107,7 +127,7 @@ export default function DistributorsMobileSheet({
         </button>
 
         {/* Content */}
-        <div className="overflow-y-auto p-4" style={{ maxHeight: "calc(80vh - 48px)" }}>
+        <div ref={scrollContainerRef} className="overflow-y-auto p-4" style={{ maxHeight: "calc(80vh - 48px)" }}>
           {/* Toggle Pill */}
           <div className="mb-4 flex justify-center">
             <div className="border-besgrow-green relative inline-flex rounded-full border-2 bg-white">
@@ -207,6 +227,7 @@ export default function DistributorsMobileSheet({
                 <AccordionItem
                   key={country}
                   value={country}
+                  data-country={country}
                   className="cursor-pointer rounded-lg border border-neutral-200 bg-white"
                 >
                   <AccordionTrigger className="rounded-none px-4 py-3 hover:no-underline">

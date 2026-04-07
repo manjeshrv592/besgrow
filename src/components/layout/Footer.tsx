@@ -143,6 +143,11 @@ export default async function Footer() {
                 </Link>
               </li>
               <li>
+                <Link className="font-semibold" href="/delivery-terms">
+                  Terms of Delivery
+                </Link>
+              </li>
+              <li>
                 <Link className="font-semibold" href="/privacy">
                   Privacy
                 </Link>

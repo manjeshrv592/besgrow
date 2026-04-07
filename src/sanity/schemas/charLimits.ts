@@ -247,6 +247,9 @@ export const charLimits: Record<string, Record<string, LanguageLimits>> = {
   termsPage: {
     title: { en: 100, nl: 100, fr: 100, de: 100, pl: 100, es: 100 },
   },
+  deliveryTermsPage: {
+    title: { en: 100, nl: 100, fr: 100, de: 100, pl: 100, es: 100 },
+  },
 
   // ──────────────────────────────────────────────
   // Product
