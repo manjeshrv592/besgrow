@@ -223,6 +223,124 @@ html body[style] {
   }
 }
 
+/* ── Hero Section Fade-in Animations ── */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroFadeFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Text elements: fade-up on mobile, fade-from-left on desktop */
+.hero-animate-title,
+.hero-animate-desc,
+.hero-animate-cta {
+  animation: heroFadeUp 0.7s ease-out both;
+}
+
+.hero-animate-title {
+  animation-delay: 0s;
+}
+
+.hero-animate-desc {
+  animation-delay: 0.15s;
+}
+
+.hero-animate-cta {
+  animation-delay: 0.3s;
+}
+
+/* Generic utility for fade-up on load (doesn't wait for scroll) */
+.animate-fade-up {
+  animation: heroFadeUp 0.7s ease-out both;
+}
+.animate-delay-2 {
+  animation-delay: 0.24s;
+}
+
+/* Image: fade-from-right on desktop only */
+.hero-animate-image {
+  /* No animation on mobile — it's a 30% opacity background overlay */
+}
+
+@media (min-width: 992px) {
+  .hero-animate-title,
+  .hero-animate-desc,
+  .hero-animate-cta {
+    animation-name: heroFadeFromLeft;
+  }
+
+  .hero-animate-image {
+    animation: heroFadeFromRight 0.8s ease-out 0.2s both;
+  }
+}
+
+/* ── Scroll-triggered Fade-in ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-in-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-in-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-delay-1 { transition-delay: 0.12s; }
+.fade-delay-2 { transition-delay: 0.24s; }
+.fade-delay-3 { transition-delay: 0.36s; }
+.fade-delay-4 { transition-delay: 0.48s; }
+
+
 /* Global Custom Scrollbar Styles */
 html {
   scrollbar-width: thin;

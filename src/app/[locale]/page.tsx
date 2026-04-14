@@ -118,7 +118,7 @@ const HomePage = async ({ params }: HomePageProps) => {
 
   return (
     <>
-      <section className="relative h-screen">
+      <section className="relative h-screen overflow-x-clip">
         <Image
           src={heroBgSrc}
           alt="Beautiful landscape with blue sky"
@@ -134,24 +134,26 @@ const HomePage = async ({ params }: HomePageProps) => {
           >
             <div className="grid h-full lg:grid-cols-2 xl:grid-cols-[4fr_3fr]">
               <div className="relative z-10 flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
-                <h1 className="h1 after:align-center after:border-besgrow-green relative mb-[1.5vw] flex items-start after:absolute after:top-[50px] after:right-[-30px] after:flex after:size-6 after:justify-center after:rounded-full after:border after:text-[10px] after:leading-[225%] after:content-['TM'] lg:mb-0">
+                <h1 className="hero-animate-title h1 after:align-center after:border-besgrow-green relative mb-[1.5vw] flex items-start after:absolute after:top-[50px] after:right-[-30px] after:flex after:size-6 after:justify-center after:rounded-full after:border after:text-[10px] after:leading-[225%] after:content-['TM'] lg:mb-0">
                   {heroTitle}
                 </h1>
 
-                <p className="pb-[1.5vw]">{heroDescription}</p>
-                <IconButton
-                  href="/contact-us"
-                  icon={
-                    <CiMail
-                      className="translate-y-0.5 lg:translate-none lg:text-white"
-                      strokeWidth={1}
-                    />
-                  }
-                >
-                  Contact Us
-                </IconButton>
+                <p className="hero-animate-desc pb-[1.5vw]">{heroDescription}</p>
+                <div className="hero-animate-cta">
+                  <IconButton
+                    href="/contact-us"
+                    icon={
+                      <CiMail
+                        className="translate-y-0.5 lg:translate-none lg:text-white"
+                        strokeWidth={1}
+                      />
+                    }
+                  >
+                    Contact Us
+                  </IconButton>
+                </div>
               </div>
-              <div className="absolute inset-0 opacity-30 lg:relative lg:opacity-100">
+              <div className="hero-animate-image absolute inset-0 opacity-30 lg:relative lg:opacity-100">
                 <Image
                   src={heroImgSrc}
                   alt="Flowers wrapping tree trunk"
@@ -165,7 +167,7 @@ const HomePage = async ({ params }: HomePageProps) => {
         </div>
       </section>
       <ProductsSection categories={categories} locale={lang} />
-      <section className="relative overflow-hidden bg-white">
+      <section className="relative overflow-x-clip overflow-y-visible bg-white">
         <div className="absolute z-10 flex size-full flex-col justify-between bg-white">
           <Image
             fill
@@ -181,7 +183,7 @@ const HomePage = async ({ params }: HomePageProps) => {
             alignment={{ default: "center", lg: "left" }}
           >
             <div className="flex flex-col gap-[5vw] lg:flex-row lg:items-center">
-              <div>
+              <div className="fade-in-left">
                 <Image
                   className="h-auto w-[40vw] -translate-x-3 lg:translate-none"
                   src={aboutImgSrc}
@@ -190,7 +192,7 @@ const HomePage = async ({ params }: HomePageProps) => {
                   height={1916}
                 />
               </div>
-              <div>
+              <div className="fade-in fade-delay-1">
                 <h2 className="h4 mb-[1vw]">{aboutTitle}</h2>
                 {aboutBody ? (
                   <PortableText value={aboutBody} />
@@ -218,11 +220,11 @@ const HomePage = async ({ params }: HomePageProps) => {
             </div>
           </Container>
           <Container className="py-[15vw] lg:py-[3vw]">
-            <div className="lg:text-center">
+            <div className="fade-in lg:text-center">
               <h2 className="h4 mb-[1vw]">{partnersTitle}</h2>
               <p className="mx-auto lg:max-w-[50vw]">{partnersDescription}</p>
             </div>
-            <div className="my-[2.5vw] flex flex-wrap items-center justify-center gap-4">
+            <div className="fade-in fade-delay-1 my-[2.5vw] flex flex-wrap items-center justify-center gap-4">
               <Button
                 asChild
                 className="bg-besgrow-green h-auto rounded-full px-8 py-4 text-base font-semibold text-white transition-colors duration-300 hover:bg-[#479a2a]"
@@ -238,7 +240,7 @@ const HomePage = async ({ params }: HomePageProps) => {
                 </Link>
               </Button>
             </div>
-            <div className="lg:grid lg:grid-cols-2 lg:gap-[6vw] lg:px-[10vw]">
+            <div className="fade-in fade-delay-2 lg:grid lg:grid-cols-2 lg:gap-[6vw] lg:px-[10vw]">
               <div className="lg:text-center">
                 <h2 className="h6 mb-[1vw]">{europeHeading}</h2>
                 <p>{europeDescription}</p>
@@ -249,13 +251,15 @@ const HomePage = async ({ params }: HomePageProps) => {
               </div>
             </div>
           </Container>
-          <Image
-            className="absolute right-[-40px] bottom-0 h-[30vh] w-auto lg:right-0 lg:h-[40vh]"
-            src="/img/white-orchid.png"
-            alt="White blue orchid"
-            width={815}
-            height={1222}
-          />
+          <div className="fade-in-right">
+            <Image
+              className="absolute right-[-40px] bottom-0 h-[30vh] w-auto lg:right-0 lg:h-[40vh]"
+              src="/img/white-orchid.png"
+              alt="White blue orchid"
+              width={815}
+              height={1222}
+            />
+          </div>
         </div>
       </section>
     </>

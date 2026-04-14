@@ -124,7 +124,7 @@ export default async function ProductsLayout({
       }));
 
   return (
-    <section className="relative pt-10 lg:pt-0">
+    <section className="relative overflow-x-clip pt-10 lg:pt-0">
       <Image
         src="/img/inner-page-compo.jpg"
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -147,7 +147,7 @@ export default async function ProductsLayout({
               src={sidebarBgSrc}
               fill
             />
-            <div className="relative z-20">
+            <div className="fade-in-right relative z-20">
               <div className="mb-4 text-center text-white">
                 <h4 className="font-ronnia text-[max(16px,1.2vw)]">
                   {sidebarTitle}

@@ -247,13 +247,13 @@ const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
       <div className="relative z-20 flex h-full flex-col">
         <Container className="flex min-h-full flex-1 flex-col justify-between py-8 lg:py-[12vh]">
           {/* Header */}
-          <div className="text-left text-white lg:text-right">
+          <div className="fade-in text-left text-white lg:text-right">
             <div className="uppercase">Products</div>
             <div className="font-bold">Explore Our Products</div>
           </div>
 
           {/* Product slider area */}
-          <div className="relative my-6 lg:my-0">
+          <div className="fade-in fade-delay-1 relative my-6 lg:my-0">
             {/* Left arrow */}
             <button
               className="product-prev absolute top-1/2 left-0 z-30 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/25 lg:flex"
@@ -333,7 +333,7 @@ const ProductsSection = ({ categories, locale }: ProductsSectionProps) => {
           </div>
 
           {/* Static grid with active highlighting */}
-          <div className="-mx-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
+          <div className="fade-in fade-delay-2 -mx-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
             <div className="flex gap-6 text-left text-white lg:grid lg:grid-cols-6 lg:gap-0 lg:text-right">
               {gridItems.map((item, index) => (
                 <div

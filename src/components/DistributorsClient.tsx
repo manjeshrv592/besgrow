@@ -341,7 +341,7 @@ const DistributorsClient = ({
     : "/img/leaves-vertical.jpg";
 
   return (
-    <section className="relative min-h-screen lg:h-screen">
+    <section className="relative min-h-screen overflow-x-clip lg:h-screen">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -352,13 +352,13 @@ const DistributorsClient = ({
       <Container className="relative z-20 h-full">
         <div className="flex h-full flex-col lg:flex-row lg:gap-24">
           <div className="flex flex-1 flex-col gap-4 px-4 py-8 pb-24 lg:px-0 lg:pt-[12vh] lg:pb-[6vh]">
-            <div>
+            <div className="fade-in">
               <h1 className="h3">{title}</h1>
               <p className="mb-4 font-semibold text-neutral-700">
                 {description}
               </p>
             </div>
-            <div className="relative h-[50vh] overflow-hidden bg-transparent lg:h-auto lg:flex-1">
+            <div className="fade-in fade-delay-1 relative h-[50vh] overflow-hidden bg-transparent lg:h-auto lg:flex-1">
               <DistributorMap
                 region={isEuropeRegion ? "europe" : "world"}
                 activeCountry={activeCountry}
@@ -380,7 +380,7 @@ const DistributorsClient = ({
                 cityCoordinatesMap={cityCoordinates}
               />
             </div>
-            <div className="hidden px-12 text-center text-sm text-neutral-500 lg:block">
+            <div className="animate-fade-up animate-delay-2 hidden px-12 text-center text-sm text-neutral-500 lg:block">
               {bottomNote}
             </div>
           </div>
@@ -392,7 +392,7 @@ const DistributorsClient = ({
               src={sidebarBgSrc}
               fill
             />
-            <div className="relative z-20 flex h-full flex-col overflow-hidden">
+            <div className="fade-in-right relative z-20 flex h-full flex-col overflow-hidden">
               {/* Toggle Pill */}
               <div className="mb-4 flex shrink-0 justify-center">
                 <RegionToggle

@@ -38,7 +38,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     <div>
       <div className="relative mb-8">
         <div className="flex-1 pt-10 lg:pt-0">
-          <h1 className="h2">{title}</h1>
+          <h1 className="fade-in h2">{title}</h1>
           {/* {product.category && (
             <p className="text-besgrow-green/60 mb-2 text-sm font-medium">
               {product.category.title}
@@ -47,13 +47,13 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           <div className="mb-8 flex flex-col-reverse items-start gap-6 lg:flex-row lg:items-end lg:gap-8">
             {/* <div className="text-besgrow-green"> */}
 
-            <div className="order-2 text-neutral-700 lg:order-1">
+            <div className="fade-in fade-delay-1 order-2 text-neutral-700 lg:order-1">
               {initialBody && (
                 <PortableText value={initialBody} />
               )}
             </div>
             {productImageSrc && (
-              <div className="order-1 mb-4 shrink-0 lg:order-2 lg:mb-6">
+              <div className="fade-in-right fade-delay-2 order-1 mb-4 shrink-0 lg:order-2 lg:mb-6">
                 <Image
                   alt={title}
                   width={676}
@@ -64,7 +64,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               </div>
             )}
           </div>
-          {hasBody && <PortableText value={body} />}
+          {hasBody && <div className="fade-in fade-delay-3"><PortableText value={body} /></div>}
         </div>
       </div>
     </div>

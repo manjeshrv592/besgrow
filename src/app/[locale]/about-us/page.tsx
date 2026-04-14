@@ -60,7 +60,7 @@ const AboutUsPage = async ({ params }: AboutUsPageProps) => {
     : null;
 
   return (
-    <section className="relative pt-10 lg:h-screen lg:pt-0">
+    <section className="relative overflow-x-clip pt-10 lg:h-screen lg:pt-0">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"
@@ -72,13 +72,13 @@ const AboutUsPage = async ({ params }: AboutUsPageProps) => {
       <Container className="relative z-20 h-full">
         <div className="flex flex-col lg:h-full lg:flex-row lg:gap-24">
           <div className="flex flex-col gap-8 px-4 py-8 lg:flex-1 lg:px-0 lg:py-[12vh]">
-            <div>
+            <div className="fade-in">
               <h1 className="h3">{title}</h1>
               <p className="mb-4 font-semibold">{leadText}</p>
               <p className="">{contentText}</p>
             </div>
             {mainImageSrc && (
-              <div className="relative aspect-4/3 w-full overflow-hidden lg:aspect-auto lg:flex-1">
+              <div className="fade-in fade-delay-1 relative aspect-4/3 w-full overflow-hidden lg:aspect-auto lg:flex-1">
                 <Image
                   src={mainImageSrc}
                   alt={title}
@@ -95,7 +95,7 @@ const AboutUsPage = async ({ params }: AboutUsPageProps) => {
               src={sidebarBgSrc}
               fill
             />
-            <div className="relative z-20">
+            <div className="fade-in-right relative z-20 flex h-full flex-col">
               <div className="mb-4 text-center text-[#184E14]">
                 <h4 className="font-ronnia text-[max(16px,1.2vw)]">
                   {sidebarTitle}

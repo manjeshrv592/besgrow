@@ -1,6 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LayoutShell from "@/components/layout/LayoutShell";
+import ScrollFadeObserver from "@/components/ScrollFadeObserver";
 import Image from "next/image";
 import Container from "@/components/layout/Container";
 import { sanityFetch, SanityLive } from "@/sanity/live";
@@ -74,7 +75,7 @@ export default async function LocaleLayout({
                   className="object-cover brightness-50"
                 />
                 <Container>
-                  <div className="relative z-10 mx-auto max-w-[50vw] text-center text-white">
+                  <div className="fade-in relative z-10 mx-auto max-w-[50vw] text-center text-white">
                     {preFooterText}
                   </div>
                 </Container>
@@ -83,6 +84,7 @@ export default async function LocaleLayout({
             </>
           }
         >
+          <ScrollFadeObserver />
           {children}
         </LayoutShell>
       </NextIntlClientProvider>
