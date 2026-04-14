@@ -57,7 +57,7 @@ export default function ProductsSidebar({
             value={category.title}
             className="cursor-pointer rounded-lg border-none bg-white"
           >
-            <AccordionTrigger className="text-besgrow-green rounded-none px-4 py-3 text-sm font-semibold hover:no-underline data-[state=open]:no-underline">
+            <AccordionTrigger className="text-besgrow-green rounded-none px-4 py-3 font-semibold hover:no-underline data-[state=open]:no-underline">
               {category.title}
             </AccordionTrigger>
             <AccordionContent>
@@ -67,7 +67,7 @@ export default function ProductsSidebar({
                   return (
                     <li
                       key={i}
-                      className={`mx-2 cursor-pointer rounded-lg px-2 py-1.5 text-sm transition-colors ${
+                      className={`mx-2 cursor-pointer rounded-lg px-2 py-1.5 transition-colors ${
                         isActive
                           ? "bg-besgrow-green/10 text-besgrow-green font-semibold"
                           : "hover:bg-muted text-neutral-600"
@@ -93,7 +93,7 @@ export default function ProductsSidebar({
           <div
             key={category.title}
             onClick={() => setOpenCategory(category.title)}
-            className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`cursor-pointer rounded-lg px-4 py-3 font-semibold transition-colors ${
               category.title === openCategory
                 ? "bg-besgrow-green text-white"
                 : "text-besgrow-green bg-white"

@@ -140,7 +140,7 @@ export default async function ProductsLayout({
           </div>
 
           {/* Shared Sidebar - hidden on mobile */}
-          <div className="relative hidden basis-[30%] flex-col border-x border-neutral-300 px-4 py-[12vh] lg:flex">
+          <div className="relative hidden basis-[30%] flex-col px-4 py-[12vh] lg:flex">
             <Image
               alt="fawn image"
               className="object-cover"
@@ -155,7 +155,9 @@ export default async function ProductsLayout({
                 <span>{sidebarDescription}</span>
               </div>
 
-              <ProductsSidebar productCategories={productCategories} />
+              <div className="[font-size:clamp(0.75rem,0.85vw,0.875rem)] [&_[data-slot=accordion-trigger]]:![font-size:clamp(0.85rem,0.95vw,1rem)] [&_[data-slot=accordion-content]]:![font-size:inherit]">
+                <ProductsSidebar productCategories={productCategories} />
+              </div>
             </div>
           </div>
         </div>

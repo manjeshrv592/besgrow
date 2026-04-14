@@ -88,7 +88,7 @@ const AboutUsPage = async ({ params }: AboutUsPageProps) => {
               </div>
             )}
           </div>
-          <div className="relative flex flex-col py-8 lg:basis-[30%] lg:border lg:border-y-neutral-300 lg:py-[12vh]">
+          <div className="relative flex flex-col py-8 lg:basis-[30%] 2xl:basis-[28%] lg:border lg:border-y-neutral-300 lg:py-[12vh]">
             <Image
               alt="fawn image"
               className="hidden object-cover lg:block"
@@ -102,16 +102,18 @@ const AboutUsPage = async ({ params }: AboutUsPageProps) => {
                 </h4>
                 <span className="">{sidebarDescription}</span>
               </div>
-              <div className="h-[50vh] lg:h-[60vh]">
-                <iframe
-                  src={googleMapsUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+              <div className="h-[50vh] px-4 lg:h-[60vh]">
+                <div className="h-full overflow-hidden rounded-md">
+                  <iframe
+                    src={googleMapsUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
               </div>
             </div>
           </div>

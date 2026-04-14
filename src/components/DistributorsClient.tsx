@@ -472,7 +472,7 @@ const DistributorsClient = ({
               </div>
 
               {/* Accordion */}
-              <div className="custom-scrollbar flex-1 overflow-y-auto pr-2 pb-4">
+              <div className="custom-scrollbar flex-1 overflow-y-auto pb-4 [font-size:clamp(0.75rem,0.85vw,0.875rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_[data-slot=accordion-trigger]]:![font-size:clamp(0.85rem,0.95vw,1rem)] [&_[data-slot=accordion-content]]:![font-size:inherit]">
                 <Accordion
                   type="single"
                   collapsible

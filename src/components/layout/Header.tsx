@@ -170,13 +170,13 @@ const Header = ({ productsHref = "/products", locale }: HeaderProps) => {
           {/* Nav - slides in from top */}
           <div className="flex justify-end gap-10 lg:justify-start">
             <nav
-              className={`fixed top-0 left-1/2 z-50 ml-auto w-full -translate-x-1/2 rounded-b-3xl bg-white px-8 py-4 font-semibold text-neutral-700 transition-transform duration-300 ease-in-out lg:relative lg:top-auto lg:left-auto lg:block lg:w-auto lg:translate-y-0 lg:translate-none lg:rounded-full lg:border lg:border-neutral-200 lg:bg-white lg:py-2 ${
+              className={`fixed top-0 left-1/2 z-50 ml-auto w-full -translate-x-1/2 rounded-b-3xl bg-white px-8 py-4 font-semibold text-neutral-700 transition-transform duration-300 ease-in-out lg:relative lg:top-auto lg:left-auto lg:flex items-center lg:w-auto lg:translate-y-0 lg:translate-none lg:rounded-full lg:border lg:border-neutral-200 lg:bg-white lg:py-2 ${
                 mobileNavOpen
                   ? "translate-y-0"
                   : "-translate-y-full lg:translate-y-0"
               }`}
             >
-              <ul className="flex justify-center gap-6 lg:gap-[3vw]">
+              <ul className="flex justify-center gap-6 lg:gap-[3vw] mt-[1%]">
                 <li>
                   <Link
                     href="/"
