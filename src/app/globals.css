@@ -284,10 +284,7 @@ html body[style] {
   animation-delay: 0.24s;
 }
 
-/* Image: fade-from-right on desktop only */
-.hero-animate-image {
-  /* No animation on mobile — it's a 30% opacity background overlay */
-}
+
 
 @media (min-width: 992px) {
   .hero-animate-title,
