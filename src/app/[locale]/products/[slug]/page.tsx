@@ -37,7 +37,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   return (
     <div>
       <div className="relative mb-8">
-        <div className="flex-1 pt-10 lg:pt-0">
+        <div className="flex-1">
           <h1 className="fade-in h2">{title}</h1>
           {/* {product.category && (
             <p className="text-besgrow-green/60 mb-2 text-sm font-medium">

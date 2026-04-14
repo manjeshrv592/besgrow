@@ -341,7 +341,7 @@ const DistributorsClient = ({
     : "/img/leaves-vertical.jpg";
 
   return (
-    <section className="relative min-h-screen overflow-x-clip lg:h-screen">
+    <section className="relative pt-10 lg:pt-0 min-h-screen overflow-x-clip lg:h-screen">
       <Image
         src={bgSrc}
         alt="Beautiful landscape with blue sky with leaves illustration"

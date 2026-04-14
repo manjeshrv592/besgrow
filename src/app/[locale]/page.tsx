@@ -179,7 +179,7 @@ const HomePage = async ({ params }: HomePageProps) => {
         </div>
         <div className="relative z-20">
           <Container
-            className="py-[15vw] lg:py-[3vw]"
+            className="py-[10vw] lg:py-[3vw]"
             alignment={{ default: "center", lg: "left" }}
           >
             <div className="flex flex-col gap-[5vw] lg:flex-row lg:items-center">
@@ -219,9 +219,9 @@ const HomePage = async ({ params }: HomePageProps) => {
               </div>
             </div>
           </Container>
-          <Container className="py-[15vw] lg:py-[3vw]">
+          <Container className="lg:py-[3vw]">
             <div className="fade-in lg:text-center">
-              <h2 className="h4 mb-[1vw]">{partnersTitle}</h2>
+              <h2 className="h4 mb-[1vw] lg:text-center!">{partnersTitle}</h2>
               <p className="mx-auto lg:max-w-[50vw]">{partnersDescription}</p>
             </div>
             <div className="fade-in fade-delay-1 my-[2.5vw] flex flex-wrap items-center justify-center gap-4">
@@ -240,14 +240,14 @@ const HomePage = async ({ params }: HomePageProps) => {
                 </Link>
               </Button>
             </div>
-            <div className="fade-in fade-delay-2 lg:grid lg:grid-cols-2 lg:gap-[6vw] lg:px-[10vw]">
+            <div className="pr-[12vw] pb-[7vw] lg:pb-0 lg:pr-0 fade-in fade-delay-2 lg:grid lg:grid-cols-2 lg:gap-[6vw] lg:px-[10vw]">
               <div className="lg:text-center">
-                <h2 className="h6 mb-[1vw]">{europeHeading}</h2>
+                <h2 className="h6 mb-[1vw] lg:text-center!">{europeHeading}</h2>
                 <p>{europeDescription}</p>
               </div>
               <div className="lg:text-center">
-                <h2 className="h6 mb-[1vw]">{worldHeading}</h2>
-                <p>{worldDescription}</p>
+                <h2 className="h6 mb-[1vw] lg:text-center!">{worldHeading}</h2>
+                <p className="pr-[15vw] lg:pr-0">{worldDescription}</p>
               </div>
             </div>
           </Container>

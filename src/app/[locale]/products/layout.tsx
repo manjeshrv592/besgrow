@@ -135,7 +135,7 @@ export default async function ProductsLayout({
       <Container className="relative z-20 h-full">
         <div className="flex h-full flex-col lg:flex-row lg:gap-24">
           {/* Main content area — rendered by page.tsx or [slug]/page.tsx */}
-          <div className="flex flex-1 flex-col gap-8 px-4 py-8 pb-24 lg:px-0 lg:py-[12vh] lg:pb-[12vh]">
+          <div className="flex flex-1 flex-col gap-8 px-4 py-8 lg:px-0 lg:py-[12vh] lg:pb-[12vh]">
             {children}
           </div>
 

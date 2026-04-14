@@ -75,7 +75,7 @@ export default async function LocaleLayout({
                   className="object-cover brightness-50"
                 />
                 <Container>
-                  <div className="fade-in relative z-10 mx-auto max-w-[50vw] text-center text-white">
+                  <div className="fade-in relative z-10 mx-auto  lg:max-w-[50vw] text-center text-white">
                     {preFooterText}
                   </div>
                 </Container>
